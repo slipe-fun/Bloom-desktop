@@ -2,7 +2,11 @@ import React, {useEffect, useRef, useState} from "react";
 import AuthTitle from "../AuthTitle.tsx";
 import VerifyInput from "../VerifyInput.tsx";
 
-export default function AuthVerify() {
+interface AuthVerifyProps {
+  onNext: () => void;
+}
+
+export default function AuthVerify({onNext}: AuthVerifyProps) {
   const [code, setCode] = useState<string[]>(['', '', '', '', '', '']);
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -10,18 +14,18 @@ export default function AuthVerify() {
 
   useEffect(() => {
     const currentCode = code.join('');
-
     if (currentCode.length === 6) {
       verifyCode(currentCode);
     }
   }, [code]);
 
   const verifyCode = (fullCode: string) => {
+    // TODO: Api call
     if (fullCode !== "123456") {
       setIsError(true);
     } else {
       setIsError(false);
-      alert("ok");
+      onNext();
     }
   };
 
@@ -74,10 +78,7 @@ export default function AuthVerify() {
 
   return (
     <div className="flex-1 flex flex-col justify-center items-center gap-lg">
-      <AuthTitle
-        icon="id"
-        title="Проверка почты"
-      />
+      <AuthTitle icon="id" title="Проверка почты"/>
       <div className="flex justify-center items-center gap-sm w-[356px]">
         {code.map((digit, index) => (
           <React.Fragment key={index}>
