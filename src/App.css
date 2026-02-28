@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'OpenRunde-Regular';
+  src: url('./assets/fonts/OpenRunde-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OpenRunde-Medium';
+  src: url('./assets/fonts/OpenRunde-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OpenRunde-Semibold';
+  src: url('./assets/fonts/OpenRunde-Semibold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OpenRunde-Bold';
+  src: url('./assets/fonts/OpenRunde-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --theme-bg: #ffffff;
+  --theme-text: #000000;
+  --theme-text-secondary: #00000059;
+  --theme-text-content: #00000080;
+  --theme-text-overlay: #000000bf;
+  --theme-foreground: #e0e0e0;
+  --theme-foreground-transparent: #0000001f;
+  --theme-indicator: #0000001a;
+  --theme-foreground-blur: #8080801a;
+  --theme-gradient-blur: #ffffffd9;
+  --theme-border: #0000001a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --theme-bg: #000000;
+    --theme-text: #ffffff;
+    --theme-text-secondary: #ffffff59;
+    --theme-text-content: #ffffff80;
+    --theme-text-overlay: #ffffffbf;
+    --theme-foreground: #1f1f1f;
+    --theme-foreground-transparent: #ffffff1f;
+    --theme-indicator: #ffffff26;
+    --theme-foreground-blur: #80808033;
+    --theme-gradient-blur: #000000d9;
+    --theme-border: #ffffff1a;
+  }
+}
+
+@theme {
+  --color-background: var(--theme-bg);
+  --color-text-main: var(--theme-text);
+  --color-text-secondary: var(--theme-text-secondary);
+  --color-text-content: var(--theme-text-content);
+  --color-text-overlay: var(--theme-text-overlay);
+  --color-foreground: var(--theme-foreground);
+  --color-foreground-transparent: var(--theme-foreground-transparent);
+  --color-indicator: var(--theme-indicator);
+  --color-foreground-blur: var(--theme-foreground-blur);
+  --color-gradient-blur: var(--theme-gradient-blur);
+  --color-border: var(--theme-border);
+
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-primary: #1A8CFF;
+  --color-orange: #FF531B;
+  --color-green: #1AFF7A;
+  --color-pink: #FF1A45;
+  --color-yellow: #FF901A;
+  --color-cyan: #28A8E9;
+  --color-purple: #A41AFF;
+  --color-red: #F43025;
+  --color-gray: #8C8C8C;
+
+  --color-backdrop-white: #ffffff80;
+  --color-backdrop-black: #00000080;
+  --color-backdrop-primary: #1A8CFF80;
+  --color-backdrop-orange: #FF531B80;
+  --color-backdrop-green: #1AFF7A80;
+  --color-backdrop-pink: #FF1A4580;
+  --color-backdrop-yellow: #FF901A80;
+  --color-backdrop-cyan: #28a8e980;
+  --color-backdrop-purple: #A41AFF80;
+  --color-backdrop-red: #F4302580;
+  --color-backdrop-gray: #8C8C8C80;
+
+  --spacing-xxs: 2px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-xxl: 24px;
+  --spacing-xxxl: 28px;
+
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-xxl: 28px;
+  --text-xxxl: 34px;
+  --text-super: 56px;
+
+  --leading-xs: 15px;
+  --leading-sm: 17px;
+  --leading-md: 19px;
+  --leading-lg: 24px;
+  --leading-xl: 34px;
+  --leading-xxl: 39px;
+
+  --radius-xxs: 8px;
+  --radius-xs: 12px;
+  --radius-sm: 16px;
+  --radius-md: 20px;
+  --radius-lg: 24px;
+  --radius-xl: 28px;
+  --radius-xxl: 32px;
+  --radius-xxxl: 42px;
+  --radius-full: 9999px;
+
+  --opacity-secondary-text: 0.35;
+  --opacity-content-text: 0.5;
+  --opacity-overlay-text: 0.75;
+
+  --border-md: 1.25px;
+
+  --font-regular: "OpenRunde-Regular", sans-serif;
+  --font-medium: "OpenRunde-Medium", sans-serif;
+  --font-semibold: "OpenRunde-Semibold", sans-serif;
+  --font-bold: "OpenRunde-Bold", sans-serif;
+}
+
+body {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+  font-family: var(--font-regular), serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
