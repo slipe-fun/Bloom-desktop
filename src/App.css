@@ -110,6 +110,7 @@
   --spacing-xxxl: 28px;
   --spacing-xxxxl: 42px;
   --spacing-super: 52px;
+  --spacing-xsuper: 60px;
 
   --text-xs: 12px;
   --text-sm: 14px;
@@ -157,4 +158,16 @@ body {
 .debug-borders * {
   outline: 1px solid rgba(255, 0, 0, 0.5);
   outline-offset: -1px;
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+input::-webkit-clear-button,
+input::-webkit-search-cancel-button {
+  display: none;
 }

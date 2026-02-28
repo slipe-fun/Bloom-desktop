@@ -4,7 +4,7 @@ import {Auth} from "./pages/Auth.tsx";
 
 function App() {
   return (
-    <div className="h-screen w-screen overflow-hidden bg-background font-regular text-text-main">
+    <div className="h-screen w-screen overflow-hidden bg-background font-medium text-text-main">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Auth/>}/>
