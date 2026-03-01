@@ -1,152 +1,123 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import AuthTitle from "../AuthTitle.tsx";
-import VerifyInput from "../VerifyInput.tsx";
+
+const quickSpring = {
+  type: "spring" as const,
+  mass: 0.2,
+  damping: 12,
+  stiffness: 120,
+};
 
 interface AuthVerifyProps {
   onNext: () => void;
 }
 
 export default function AuthVerify({ onNext }: AuthVerifyProps) {
-  const [code, setCode] = useState<string[]>(['', '', '', '', '', '']);
-  const [isError, setIsError] = useState<boolean>(false);
+  const [value, setValue] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const indicatorRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const moveIndicator = useCallback((target: HTMLInputElement | null) => {
-    const indicator = indicatorRef.current;
-    if (!indicator || !target) {
-      if (indicator) indicator.style.opacity = '0';
-      return;
-    }
-
-    const width = target.offsetWidth;
-    const left = target.offsetLeft;
-
-    requestAnimationFrame(() => {
-      indicator.style.width = `${width}px`;
-      indicator.style.transform = `translateX(${left}px)`;
-      indicator.style.opacity = '1';
-    });
-  }, []);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const length = 6;
 
   useEffect(() => {
-    const currentCode = code.join('');
-    if (currentCode.length === 6) verifyCode(currentCode);
-  }, [code]);
-
-  const verifyCode = (fullCode: string) => {
-    if (fullCode !== "123456") {
-      setIsError(true);
-    } else {
-      setIsError(false);
-      onNext();
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const value = e.target.value;
-    if (isNaN(Number(value))) return;
-    if (isError) setIsError(false);
-
-    const newCode = [...code];
-    newCode[index] = value.substring(value.length - 1);
-    setCode(newCode);
-
-    if (value !== '' && index < 5) {
-      const nextInput = inputRefs.current[index + 1];
-      nextInput?.focus();
-      moveIndicator(nextInput);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
-    if (e.key === 'Backspace') {
-      if (isError) setIsError(false);
-      if (code[index] === '' && index > 0) {
-        const prevInput = inputRefs.current[index - 1];
-        prevInput?.focus();
-        moveIndicator(prevInput);
+    if (value.length === length) {
+      if (value !== "123456") {
+        setIsError(true);
       } else {
-        const newCode = [...code];
-        newCode[index] = '';
-        setCode(newCode);
+        setIsError(false);
+        onNext();
       }
     }
-  };
+  }, [value, onNext]);
 
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/\D/g, "").slice(0, length);
     if (isError) setIsError(false);
-    const pasteData = e.clipboardData.getData('text').slice(0, 6).replace(/\D/g, '');
-
-    if (pasteData) {
-      const newCode = [...code];
-      pasteData.split('').forEach((char, i) => newCode[i] = char);
-      setCode(newCode);
-      
-      const focusIndex = Math.min(pasteData.length, 5);
-      const targetInput = inputRefs.current[focusIndex];
-      targetInput?.focus();
-      moveIndicator(targetInput);
-    }
+    setValue(val);
   };
 
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    moveIndicator(e.target);
+  const handleContainerClick = () => {
+    inputRef.current?.focus();
   };
-
-  const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
-    if (!containerRef.current?.contains(e.relatedTarget as Node)) {
-        const indicator = indicatorRef.current;
-        if (indicator) indicator.style.opacity = '0';
-    }
-  };
+  const activeIndex = Math.min(value.length, length - 1);
+  const showIndicator = isFocused && value.length < length;
 
   return (
     <div className="flex-1 flex flex-col justify-center items-center gap-lg w-[356px]">
       <AuthTitle icon="id" title="Проверка почты" />
-      
-      <div 
-        ref={containerRef}
-        className="relative flex justify-center items-center gap-sm w-full"
-        onBlur={handleBlur} 
+
+      <div
+        className="relative flex justify-center items-center gap-sm w-full cursor-text"
+        onClick={handleContainerClick}
       >
-        <div
-          ref={indicatorRef}
-          className={`absolute pointer-events-none border-2 rounded-sm top-0 bottom-0 z-10 box-border
-            transition-all duration-200 ease-out will-change-transform
-            ${isError ? 'border-red ring-2 ring-backdrop-red/20' : 'border-primary'}
-          `}
-          style={{
-            left: 0, 
-            opacity: 0,
-          }}
+        <input
+          ref={inputRef}
+          type="text"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          value={value}
+          onChange={handleChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          className="absolute inset-0 opacity-0 cursor-default"
+          style={{ zIndex: -1 }}
+          maxLength={6}
         />
 
-        {code.map((digit, index) => (
-          <React.Fragment key={index}>
-            <VerifyInput
-              ref={(el) => { inputRefs.current[index] = el; }}
-              value={digit}
-              onChange={(e) => handleChange(e, index)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              onPaste={handlePaste}
-              onFocus={handleFocus}
-              placeholder="0"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              error={isError}
+        <AnimatePresence>
+          {showIndicator && (
+            <motion.div
+              layoutId="otp-indicator"
+              className={`absolute z-10 border-2 rounded-sm pointer-events-none box-border
+                ${isError ? 'border-red ring-2 ring-backdrop-red/20' : 'border-primary'}
+              `}
+              initial={false}
+              animate={{
+                x: activeIndex * (48 + 8) + (activeIndex >= 3 ? 28 : 0),
+                width: 48,
+                height: 64,
+              }}
+              transition={quickSpring}
+              style={{ position: 'absolute', left: 0, top: 0 }}
             />
-            {index === 2 && (
-              <span className={`text-xl font-light mx-1 transition-colors ${isError ? 'text-red' : 'text-text-secondary'}`}>
-                —
-              </span>
-            )}
-          </React.Fragment>
-        ))}
+          )}
+        </AnimatePresence>
+
+        {Array.from({ length }).map((_, i) => {
+          const char = value[i];
+          const isSeparator = i === 3;
+
+          return (
+            <React.Fragment key={i}>
+              {isSeparator && (
+                <span className={`text-xl font-light mx-1 transition-colors ${isError ? 'text-red' : 'text-text-secondary'}`}>
+                  —
+                </span>
+              )}
+
+              <div
+                className="relative w-12 h-16 flex items-center justify-center rounded-sm bg-foreground-soft"
+              >
+                {char ? (
+                  <span className={`text-xxxl font-semibold ${isError ? 'text-red' : 'text-text-main'}`}>
+                    {char}
+                  </span>
+                ) : (
+                  <span className="text-xxxl font-semibold text-text-secondary">
+                    0
+                  </span>
+                )}
+              </div>
+            </React.Fragment>
+          );
+        })}
       </div>
+
+      <p className="text-center select-none font-medium text-md text-text-secondary w-full break-words">
+        Введите 6-значный код, отправленный на вашу почту
+      </p>
     </div>
   );
 }
