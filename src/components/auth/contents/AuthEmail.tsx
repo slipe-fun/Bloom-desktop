@@ -60,10 +60,6 @@ async function clicked_submit(email)
                 status = error.response.status;
                 throw new Error(`Auth register route returned the ${status} status code`);
         });
-        if (res.status != 200)
-        {
-            throw Error(`Auth register route has ${res.status} as the status code`)
-        }
         if (res.data?.error) {
             throw new Error('Failed to register')
         }
