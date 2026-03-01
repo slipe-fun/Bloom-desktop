@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import AuthTitle from "../AuthTitle.tsx";
+import AuthTitle from "../AuthTitle.tsx"; // Проверьте путь
 
-const quickSpring = {
+const springy = {
   type: "spring" as const,
   mass: 0.2,
   damping: 12,
@@ -20,9 +20,14 @@ export default function AuthVerify({ onNext }: AuthVerifyProps) {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const length = 6;
+  const separatorIndex = Math.floor(length / 2);
+
+  const activeIndex = value.length;
+  const indicatorIndex = Math.min(activeIndex, length - 1);
+  const isComplete = activeIndex === length;
 
   useEffect(() => {
-    if (value.length === length) {
+    if (isComplete) {
       if (value !== "123456") {
         setIsError(true);
       } else {
@@ -30,7 +35,7 @@ export default function AuthVerify({ onNext }: AuthVerifyProps) {
         onNext();
       }
     }
-  }, [value, onNext]);
+  }, [value, isComplete, onNext]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/\D/g, "").slice(0, length);
@@ -41,8 +46,6 @@ export default function AuthVerify({ onNext }: AuthVerifyProps) {
   const handleContainerClick = () => {
     inputRef.current?.focus();
   };
-  const activeIndex = Math.min(value.length, length - 1);
-  const showIndicator = isFocused && value.length < length;
 
   return (
     <div className="flex-1 flex flex-col justify-center items-center gap-lg w-[356px]">
@@ -61,54 +64,73 @@ export default function AuthVerify({ onNext }: AuthVerifyProps) {
           onChange={handleChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          className="absolute inset-0 opacity-0 cursor-default"
-          style={{ zIndex: -1 }}
-          maxLength={6}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-text z-50"
+          maxLength={length}
         />
-
-        <AnimatePresence>
-          {showIndicator && (
-            <motion.div
-              layoutId="otp-indicator"
-              className={`absolute z-10 border-2 rounded-sm pointer-events-none box-border
-                ${isError ? 'border-red ring-2 ring-backdrop-red/20' : 'border-primary'}
-              `}
-              initial={false}
-              animate={{
-                x: activeIndex * (48 + 8) + (activeIndex >= 3 ? 28 : 0),
-                width: 48,
-                height: 64,
-              }}
-              transition={quickSpring}
-              style={{ position: 'absolute', left: 0, top: 0 }}
-            />
-          )}
-        </AnimatePresence>
 
         {Array.from({ length }).map((_, i) => {
           const char = value[i];
-          const isSeparator = i === 3;
+          const isPlaceholder = !char;
+          const isActiveIndicator = i === indicatorIndex;
 
           return (
-            <React.Fragment key={i}>
-              {isSeparator && (
-                <span className={`text-xl font-light mx-1 transition-colors ${isError ? 'text-red' : 'text-text-secondary'}`}>
-                  —
-                </span>
+            <React.Fragment key={`cell-fragment-${i}`}>
+              {i === separatorIndex && (
+                <div 
+                  className={`h-[2px] w-4 rounded-full transition-colors ${
+                    isError ? 'bg-red' : 'bg-text-secondary'
+                  }`} 
+                />
               )}
 
-              <div
-                className="relative w-12 h-16 flex items-center justify-center rounded-sm bg-foreground-soft"
+              <div 
+                className={`relative w-12 h-16 flex items-center justify-center rounded-sm bg-foreground-soft transition-all duration-300 ${
+                  isActiveIndicator ? 'z-20' : 'z-0'
+                }`}
               >
-                {char ? (
-                  <span className={`text-xxxl font-semibold ${isError ? 'text-red' : 'text-text-main'}`}>
-                    {char}
-                  </span>
-                ) : (
-                  <span className="text-xxxl font-semibold text-text-secondary">
-                    0
-                  </span>
-                )}
+                <AnimatePresence>
+                  {!isPlaceholder ? (
+                    <motion.span
+                      key={`char-${char}-${i}`}
+                      initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.8, y: -10 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      className={`absolute z-10 text-xxxl font-semibold pointer-events-none ${
+                        isError ? 'text-red' : 'text-text-main'
+                      }`}
+                    >
+                      {char}
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key={`placeholder-${i}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute z-0 text-xxxl font-semibold text-text-secondary pointer-events-none"
+                    >
+                      0
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                  {isFocused && isActiveIndicator && !isComplete && (
+                    <motion.div
+                      layoutId="otp-indicator"
+                      transition={springy}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.2 }}
+                      className={`absolute inset-0 border-2 rounded-sm pointer-events-none z-20 ${
+                        isError ? 'border-red ring-2 ring-backdrop-red/20' : 'border-primary'
+                      }`}
+                    />
+                  )}
+                </AnimatePresence>
+                
               </div>
             </React.Fragment>
           );
