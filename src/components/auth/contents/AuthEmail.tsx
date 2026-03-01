@@ -6,7 +6,9 @@ import AuthTitle from "../AuthTitle.tsx";
 import Icon from "../../ui/Icon.tsx"; 
 import parseEmail from "../../../lib/parseEmail.ts";
 import { PROVIDERS_LOGOS } from "../../../constants/providerLogos.ts";
+import { API_URL } from "../../../constants/api_url.ts";
 import { Variants } from "framer-motion";
+import axios from "axios";
 
 interface AuthEmailProps {
   email: string;
@@ -27,6 +29,31 @@ const animVariants: Variants = {
     transition: { duration: 0.15, ease: "circOut" } 
   }
 };
+
+async function clicked_submit(email)
+{
+    let exists: boolean = false
+    try {
+        res_exists = await axios.get(`${API_URL}/user/exists`, { params: { email }});
+        exists = res_exists.data?.exists
+    } catch (error: any) {
+        if (!error?.response?.data?.exists) {
+            exists = false
+        } else {
+            throw new Error(error.response?.data?.message || 'Failed to check user')
+        }
+    }
+    if (exists) {
+        axios.post(`${API_URL}/auth/request-code`, { email })
+    } else {
+        const res = await axios.post(`${API_URL}/auth/register`, { email })
+        if (res.data?.error) {
+            throw new Error('Failed to register')
+        }
+    }
+
+    return { exists }
+}
 
 export default function AuthEmail({email, setEmail, onNext}: AuthEmailProps) {
   const [provider, setProvider] = useState<keyof typeof PROVIDERS_LOGOS | 'unknown'>('unknown');
@@ -91,7 +118,11 @@ export default function AuthEmail({email, setEmail, onNext}: AuthEmailProps) {
         После этого мы отправим 6-значный код подтверждения на вашу почту
       </p>
 
-      <Button type="submit" disabled={!isValid}>
+      <Button
+            type="submit"
+            disabled={!isValid}
+            onClick={() => clicked_submit(email)}
+      >
         Продолжить
       </Button>
     </form>
