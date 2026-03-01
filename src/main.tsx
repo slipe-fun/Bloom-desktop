@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import App from "./app";
 import {applyDebugBorders} from "./config/debug.ts";
 import {applyTheme} from "./config/theme.ts";
 
