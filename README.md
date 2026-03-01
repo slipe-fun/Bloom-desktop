@@ -1,7 +1,9 @@
-# Tauri + React + Typescript
+# Bloom-desktop
+Written in Tauri, React and TypeScript. Bloom offers many things. Post-quantum encryption, open code and a simple API. Once the project will be released it will have much more than that.
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+## Build
 
-## Recommended IDE Setup
+Run `npm i`
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+The build and run command is:
+`npx tauri dev`
