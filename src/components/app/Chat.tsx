@@ -35,7 +35,7 @@ export function Chat()
     )
 }
 
-const styles = {
+const styles = { // Don't roast this code pls 😭️
     container: {
         display: 'flex',
         flexDirection: 'column',

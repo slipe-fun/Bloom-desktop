@@ -18,7 +18,7 @@ export default function AuthSignUp({onNext}: AuthSignUpProps) {
     
     // TODO: Api call and register
     // onNext();
-    navigate("/chat", { replace: true })
+    navigate("/chat")
   };
 
   return (
