@@ -2,19 +2,23 @@ import TextInput from "../../ui/TextInput.tsx";
 import Button from "../../ui/Button.tsx";
 import React, {useState} from "react";
 import AuthTitle from "../AuthTitle.tsx";
+import { useNavigate } from 'react-router';
 
 interface AuthSignUpProps {
   onNext: () => void;
 }
 
 export default function AuthSignUp({onNext}: AuthSignUpProps) {
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
     // TODO: Api call and register
-    onNext();
+    // onNext();
+    navigate("/chat", { replace: true })
   };
 
   return (
