@@ -5,26 +5,26 @@ import AuthContainer from "../AuthContainer.tsx";
 interface AuthSignUpProps {
   onNext: () => void;
   isError: boolean;
-  setIsError: (val: boolean) => void;
+  errorMsg: string;
+  setError: (val: string | boolean) => void;
 }
 
-export default function AuthSignUp({onNext, isError, setIsError}: AuthSignUpProps) {
+export default function AuthSignUp({onNext, isError, errorMsg, setError}: AuthSignUpProps) {
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const isPasswordValid = password.length >= 8;
     const isNicknameValid = nickname.trim().length > 0;
 
-    if (!isPasswordValid || !isNicknameValid) {
-      setIsError(true);
+    if (!isNicknameValid) {
+      setError("Никнейм не может быть пустым");
       return;
     }
 
     if (password.length < 8) {
-      setIsError(true);
+      setError("Пароль слишком короткий (мин. 8 симв.)");
       return;
     }
 
@@ -36,6 +36,7 @@ export default function AuthSignUp({onNext, isError, setIsError}: AuthSignUpProp
     <AuthContainer
       icon="lock"
       title="Пароль и ник"
+      errorText={errorMsg}
       onSubmit={handleSubmit}
       isError={isError}
       description={
@@ -53,7 +54,7 @@ export default function AuthSignUp({onNext, isError, setIsError}: AuthSignUpProp
         error={isError}
         onChange={(e) => {
           setPassword(e.target.value);
-          setIsError(false);
+          setError(false);
         }}
       />
       <TextInput
@@ -63,7 +64,7 @@ export default function AuthSignUp({onNext, isError, setIsError}: AuthSignUpProp
         error={isError}
         onChange={(e) => {
           setNickname(e.target.value);
-          setIsError(false);
+          setError(false);
         }}
       />
     </AuthContainer>

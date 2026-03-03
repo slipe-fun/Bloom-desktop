@@ -14,9 +14,10 @@ interface AuthEmailProps {
   email: string;
   setEmail: (val: string) => void;
   onNext: () => void;
-  setError: (val: boolean) => void;
+  setError: (val: string | boolean) => void;
   setLoading: (val: boolean) => void;
   isError: boolean;
+  errorMsg: string;
 }
 
 const animVariants: Variants = {
@@ -40,7 +41,8 @@ export default function AuthEmail({
                                     onNext,
                                     setError,
                                     setLoading,
-                                    isError
+                                    isError,
+                                    errorMsg
                                   }: AuthEmailProps) {
   const [provider, setProvider] = useState<keyof typeof PROVIDERS_LOGOS | 'unknown'>('unknown');
   const isValid = email.trim().length > 0 && email.includes('@');
@@ -53,7 +55,7 @@ export default function AuthEmail({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!isValid) {
-      setError(true);
+      setError("Пожалуйста, введите корректный адрес почты");
       return;
     }
 
@@ -86,7 +88,7 @@ export default function AuthEmail({
       }
     } catch (error: any) {
       console.error("Auth Error:", error);
-      setError(true);
+      setError("Ошибка соединения с сервером. Попробуйте позже.");
     } finally {
       setLoading(false);
     }
@@ -128,6 +130,7 @@ export default function AuthEmail({
     <AuthContainer
       icon="at"
       title="Введите почту"
+      errorText={errorMsg}
       description="После этого мы отправим 6-значный код подтверждения на вашу почту"
       onSubmit={handleSubmit}
       isError={isError}

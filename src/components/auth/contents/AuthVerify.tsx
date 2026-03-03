@@ -12,10 +12,11 @@ const springy = {
 interface AuthVerifyProps {
   onNext: () => void;
   isError: boolean;
-  setIsError: (val: boolean) => void;
+  errorMsg: string;
+  setError: (val: string | boolean) => void;
 }
 
-export default function AuthVerify({onNext, isError, setIsError}: AuthVerifyProps) {
+export default function AuthVerify({onNext, isError, errorMsg, setError}: AuthVerifyProps) {
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
@@ -36,21 +37,21 @@ export default function AuthVerify({onNext, isError, setIsError}: AuthVerifyProp
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
     if (value.length < length) {
-      setIsError(true);
+      setError("Код должен состоять из 6 цифр");
       return;
     }
 
     if (value !== "123456") {
-      setIsError(true);
+      setError("Неверный код подтверждения");
     } else {
-      setIsError(false);
+      setError(false);
       onNext();
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/\D/g, "").slice(0, length);
-    if (isError) setIsError(false);
+    if (isError) setError(false);
     setValue(val);
   };
 
@@ -58,6 +59,7 @@ export default function AuthVerify({onNext, isError, setIsError}: AuthVerifyProp
     <AuthContainer
       icon="id"
       title="Проверка почты"
+      errorText={errorMsg}
       description="Введите 6-значный код, отправленный на вашу почту"
       onSubmit={handleSubmit}
       isError={isError}

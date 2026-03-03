@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {AnimatePresence, motion} from "framer-motion";
 import AuthEmail from "./contents/AuthEmail.tsx";
 import AuthSignUp from "./contents/AuthSignUp.tsx";
@@ -31,7 +31,32 @@ const slideVariants = {
 export function AuthContent({step, direction, onNext, onPrev}: AuthContentProps) {
   const [email, setEmail] = useState("");
   const [isError, setIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleSetError = (val: string | boolean) => {
+    if (typeof val === "string") {
+      setErrorMsg(val);
+      setIsError(true);
+    } else {
+      setIsError(val);
+    }
+  };
+
+  useEffect(() => {
+    setIsError(false);
+    setErrorMsg("");
+    setIsLoading(false);
+  }, [step]);
+
+  useEffect(() => {
+    if (isError) {
+      const timer = setTimeout(() => {
+        setIsError(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [isError]);
 
   return (
     <>
@@ -77,23 +102,26 @@ export function AuthContent({step, direction, onNext, onPrev}: AuthContentProps)
                 email={email}
                 setEmail={setEmail}
                 onNext={onNext}
-                setError={setIsError}
-                setLoading={setIsLoading}
+                setError={handleSetError}
                 isError={isError}
+                setLoading={setIsLoading}
+                errorMsg={errorMsg}
               />
             )}
             {step === 1 && (
               <AuthVerify
                 onNext={onNext}
+                setError={handleSetError}
                 isError={isError}
-                setIsError={setIsError}
+                errorMsg={errorMsg}
               />
             )}
             {step === 2 && (
               <AuthSignUp
                 onNext={onNext}
+                setError={handleSetError}
                 isError={isError}
-                setIsError={setIsError}
+                errorMsg={errorMsg}
               />
             )}
           </motion.div>
