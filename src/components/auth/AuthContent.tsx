@@ -8,13 +8,14 @@ import Button from "../ui/Button.tsx";
 
 interface AuthContentProps {
   step: number;
+  direction: number;
   onNext: () => void;
   onPrev: () => void;
 }
 
 const slideVariants = {
   enter: (direction: number) => ({
-    x: direction > 0 ? 50 : -50,
+    x: direction > 0 ? 100 : -100,
     opacity: 0,
   }),
   center: {
@@ -22,28 +23,21 @@ const slideVariants = {
     opacity: 1,
   },
   exit: (direction: number) => ({
-    x: direction > 0 ? -50 : 50,
+    x: direction > 0 ? -100 : 100,
     opacity: 0,
   }),
 };
 
-export function AuthContent({step, onNext, onPrev}: AuthContentProps) {
+export function AuthContent({step, direction, onNext, onPrev}: AuthContentProps) {
   const [email, setEmail] = useState("");
   const [isError, setIsError] = useState(false);
-  const [direction, setDirection] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleStepChange = (newStep: number) => {
-    setDirection(newStep > step ? 1 : -1);
-    setIsError(false);
-    if (newStep > step) onNext(); else onPrev();
-  };
 
   return (
     <>
       {step === 1 && (
         <div className="absolute left-1/5 top-1/2 -translate-y-1/2 z-10">
-          <Button variant="icon-secondary" onClick={() => handleStepChange(step - 1)}>
+          <Button variant="icon-secondary" onClick={onPrev}>
             <Icon size={30} icon="chevron.left"/>
           </Button>
         </div>
@@ -64,7 +58,7 @@ export function AuthContent({step, onNext, onPrev}: AuthContentProps) {
       )}
 
       <div className="grid h-full">
-        <AnimatePresence custom={direction} initial={false} mode="wait">
+        <AnimatePresence custom={direction} initial={false}>
           <motion.div
             key={step}
             custom={direction}
@@ -72,7 +66,10 @@ export function AuthContent({step, onNext, onPrev}: AuthContentProps) {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{duration: 0.3, ease: "easeInOut"}}
+            transition={{
+              x: {type: "spring", stiffness: 300, damping: 30},
+              opacity: {duration: 0.2}
+            }}
             className="col-start-1 row-start-1 h-full w-auto flex flex-col justify-center"
           >
             {step === 0 && (

@@ -5,14 +5,27 @@ import {AuthContent} from "../components/auth/AuthContent.tsx";
 
 export function Auth() {
   const [step, setStep] = useState(0);
+  const [direction, setDirection] = useState(1);
 
-  const handleNext = () => setStep((prev) => Math.min(prev + 1, 2));
-  const handlePrev = () => setStep((prev) => Math.max(prev - 1, 0));
+  const handleNext = () => {
+    setDirection(1);
+    setStep((prev) => Math.min(prev + 1, 2));
+  };
+
+  const handlePrev = () => {
+    setDirection(-1);
+    setStep((prev) => Math.max(prev - 1, 0));
+  };
 
   return (
-    <main className="size-full flex flex-col justify-center items-center relative">
+    <main className="size-full flex flex-col justify-center items-center relative overflow-hidden">
       <AuthHeader/>
-      <AuthContent step={step} onNext={handleNext} onPrev={handlePrev}/>
+      <AuthContent
+        step={step}
+        direction={direction}
+        onNext={handleNext}
+        onPrev={handlePrev}
+      />
       <AuthFooter step={step}/>
     </main>
   );
