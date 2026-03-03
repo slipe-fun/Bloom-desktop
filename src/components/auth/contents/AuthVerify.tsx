@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import AuthTitle from "../AuthTitle.tsx"; // Проверьте путь
+import React, {useEffect, useRef, useState} from "react";
+import {AnimatePresence, motion} from "framer-motion";
+import AuthTitle from "../AuthTitle.tsx";
 
 const springy = {
   type: "spring" as const,
@@ -11,11 +11,12 @@ const springy = {
 
 interface AuthVerifyProps {
   onNext: () => void;
+  isError: boolean;
+  setIsError: (val: boolean) => void;
 }
 
-export default function AuthVerify({ onNext }: AuthVerifyProps) {
+export default function AuthVerify({onNext, isError, setIsError}: AuthVerifyProps) {
   const [value, setValue] = useState("");
-  const [isError, setIsError] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -28,14 +29,24 @@ export default function AuthVerify({ onNext }: AuthVerifyProps) {
 
   useEffect(() => {
     if (isComplete) {
-      if (value !== "123456") {
-        setIsError(true);
-      } else {
-        setIsError(false);
-        onNext();
-      }
+      handleSubmit();
     }
-  }, [value, isComplete, onNext]);
+  }, [isComplete]);
+
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (value.length < length) {
+      setIsError(true);
+      return;
+    }
+
+    if (value !== "123456") {
+      setIsError(true);
+    } else {
+      setIsError(false);
+      onNext();
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/\D/g, "").slice(0, length);
@@ -43,17 +54,17 @@ export default function AuthVerify({ onNext }: AuthVerifyProps) {
     setValue(val);
   };
 
-  const handleContainerClick = () => {
-    inputRef.current?.focus();
-  };
-
   return (
-    <div className="flex-1 flex flex-col justify-center items-center gap-lg w-[356px]">
-      <AuthTitle icon="id" title="Проверка почты" />
+    <form
+      id="auth-step-form"
+      onSubmit={handleSubmit}
+      className="flex-1 flex flex-col justify-center items-center gap-lg w-[356px]"
+    >
+      <AuthTitle icon="id" title="Проверка почты"/>
 
       <div
         className="relative flex justify-center items-center gap-sm w-full cursor-text"
-        onClick={handleContainerClick}
+        onClick={() => inputRef.current?.focus()}
       >
         <input
           ref={inputRef}
@@ -68,7 +79,7 @@ export default function AuthVerify({ onNext }: AuthVerifyProps) {
           maxLength={length}
         />
 
-        {Array.from({ length }).map((_, i) => {
+        {Array.from({length}).map((_, i) => {
           const char = value[i];
           const isPlaceholder = !char;
           const isActiveIndicator = i === indicatorIndex;
@@ -76,14 +87,14 @@ export default function AuthVerify({ onNext }: AuthVerifyProps) {
           return (
             <React.Fragment key={`cell-fragment-${i}`}>
               {i === separatorIndex && (
-                <div 
+                <div
                   className={`h-[2px] w-4 rounded-full transition-colors ${
                     isError ? 'bg-red' : 'bg-text-secondary'
-                  }`} 
+                  }`}
                 />
               )}
 
-              <div 
+              <div
                 className={`relative w-12 h-16 flex items-center justify-center rounded-sm bg-foreground-soft transition-all duration-300 ${
                   isActiveIndicator ? 'z-20' : 'z-0'
                 }`}
@@ -92,10 +103,10 @@ export default function AuthVerify({ onNext }: AuthVerifyProps) {
                   {!isPlaceholder ? (
                     <motion.span
                       key={`char-${char}-${i}`}
-                      initial={{ opacity: 0, scale: 0.8, y: 10 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.8, y: -10 }}
-                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      initial={{opacity: 0, scale: 0.8, y: 10}}
+                      animate={{opacity: 1, scale: 1, y: 0}}
+                      exit={{opacity: 0, scale: 0.8, y: -10}}
+                      transition={{type: "spring", stiffness: 300, damping: 20}}
                       className={`absolute z-10 text-xxxl font-semibold pointer-events-none ${
                         isError ? 'text-red' : 'text-text-main'
                       }`}
@@ -105,10 +116,10 @@ export default function AuthVerify({ onNext }: AuthVerifyProps) {
                   ) : (
                     <motion.span
                       key={`placeholder-${i}`}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.15 }}
+                      initial={{opacity: 0}}
+                      animate={{opacity: 1}}
+                      exit={{opacity: 0}}
+                      transition={{duration: 0.15}}
                       className="absolute z-0 text-xxxl font-semibold text-text-secondary pointer-events-none"
                     >
                       0
@@ -121,16 +132,16 @@ export default function AuthVerify({ onNext }: AuthVerifyProps) {
                     <motion.div
                       layoutId="otp-indicator"
                       transition={springy}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.2 }}
+                      initial={{opacity: 0, scale: 0.8}}
+                      animate={{opacity: 1, scale: 1}}
+                      exit={{opacity: 0, scale: 1.2}}
                       className={`absolute inset-0 border-2 rounded-sm pointer-events-none z-20 ${
                         isError ? 'border-red ring-2 ring-backdrop-red/20' : 'border-primary'
                       }`}
                     />
                   )}
                 </AnimatePresence>
-                
+
               </div>
             </React.Fragment>
           );
@@ -140,6 +151,8 @@ export default function AuthVerify({ onNext }: AuthVerifyProps) {
       <p className="text-center select-none font-medium text-md text-text-secondary w-full break-words">
         Введите 6-значный код, отправленный на вашу почту
       </p>
-    </div>
+
+      <button type="submit" className="hidden"/>
+    </form>
   );
 }

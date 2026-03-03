@@ -2,22 +2,27 @@ import {forwardRef} from 'react';
 import {HTMLMotionProps, motion} from "framer-motion";
 
 export interface ButtonProps extends HTMLMotionProps<'button'> {
-  variant?: 'primary' | 'icon-secondary';
+  variant?: 'primary' | 'icon-primary' | 'icon-secondary';
+  error?: boolean;
 }
 
 const MotionButton = motion.button;
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({children, variant = 'primary', className = '', ...props}, ref) => {
+  ({children, variant = 'primary', error, className = '', ...props}, ref) => {
     const baseStyles = `
       h-super flex items-center justify-center rounded-full select-none
       enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-20
       focus-visible:outline-none
+      ${error ? '!bg-red !text-white' : ''}
     `;
 
     const variants = {
       primary: `
         w-full bg-primary text-lg font-semibold text-white
+      `,
+      'icon-primary': `
+        aspect-square bg-primary shadow-md text-white
       `,
       'icon-secondary': `
         aspect-square bg-background text-text-content shadow-md
