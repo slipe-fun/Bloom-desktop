@@ -2,12 +2,13 @@ import Icon from "../components/ui/Icon.tsx";
 import Button from "../components/ui/Button.tsx";
 
 export function Chat() {
+  // TODO: Refactor to components
   return (
     <div className="size-full flex justify-center items-center relative overflow-hidden">
       <aside className="w-96 h-full flex flex-col select-none">
         <div className="w-full h-full flex-1">
           <div>
-
+            {/*TODO*/}
           </div>
           <section className="flex flex-1 w-ful h-full overflow-y-auto justify-center items-center ">
             {/*  IF EMPTY: */}
@@ -28,7 +29,7 @@ export function Chat() {
         </div>
         <div className="">
           <nav>
-
+            {/*TODO*/}
           </nav>
         </div>
       </aside>
