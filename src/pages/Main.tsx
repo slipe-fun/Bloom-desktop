@@ -3,6 +3,7 @@ import NoSelectedChatContent from "../components/main/chat/NoSelectedChatContent
 import Navbar from "../components/ui/nav/Navbar.tsx";
 import {useState} from "react";
 import {ICONS} from "../constants/icons.ts";
+import TopBar from "../components/main/chat/Topbar.tsx";
 
 export function Main() {
   const [currentTab, setCurrentTab] = useState<keyof typeof ICONS>('person.circle');
@@ -10,11 +11,9 @@ export function Main() {
   return (
     <div className="size-full flex justify-center items-center relative overflow-hidden">
       <aside className="w-96 h-full flex flex-col select-none">
-        <div className="w-full h-full flex-1">
-          <div>
-            {/*TODO*/}
-          </div>
-          <section className="flex flex-1 w-ful h-full overflow-y-auto justify-center items-center ">
+        <div className="flex flex-col w-full h-full flex-1">
+          <TopBar/>
+          <section className="flex flex-1 w-full h-full overflow-y-auto justify-center items-center">
             <EmptyChatsSide/>
           </section>
         </div>
