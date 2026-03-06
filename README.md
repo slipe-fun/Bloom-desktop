@@ -3,7 +3,7 @@
 Bloom Desktop is a modern messenger built with **Tauri**, **React**, and **TypeScript**.
 It offers post-quantum encryption, open-source code, a simple API, and more to come.
 
-We use **Tailwind CSS** for styling—please keep all UI consistent with it.
+We use **Tailwind CSS** for styling - please keep all UI consistent with it.
 
 ---
 
