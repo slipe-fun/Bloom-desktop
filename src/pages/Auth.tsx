@@ -11,7 +11,7 @@ export function Auth() {
 
   const handleNext = () => {
     if (step === 2) {
-      navigate("/chat");
+      navigate("/main");
       return;
     }
 
