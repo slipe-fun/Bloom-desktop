@@ -1,7 +1,7 @@
 import "./app.css";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {Auth} from "./pages/Auth.tsx";
-import {Chat} from "./pages/Chat.tsx";
+import {Main} from "./pages/Main.tsx";
 
 const DEV_ENTRY = import.meta.env.VITE_DEV_ENTRY_PATH;
 
@@ -14,7 +14,7 @@ function App() {
             DEV_ENTRY ? <Navigate to={DEV_ENTRY} replace/> : <Auth/>
           }/>
 
-          <Route path="/chat" element={<Chat/>}/>
+          <Route path="/main" element={<Main/>}/>
           <Route path="/auth" element={<Auth/>}/>
         </Routes>
       </BrowserRouter>
