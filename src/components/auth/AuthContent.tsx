@@ -62,7 +62,7 @@ export function AuthContent({step, direction, onNext, onPrev}: AuthContentProps)
     <>
       {step === 1 && (
         <div className="absolute left-1/5 top-1/2 -translate-y-1/2 z-10">
-          <Button variant="icon-secondary" onClick={onPrev}>
+          <Button variant="icon-big-secondary" onClick={onPrev}>
             <Icon size={30} icon="chevron.left"/>
           </Button>
         </div>
@@ -73,7 +73,7 @@ export function AuthContent({step, direction, onNext, onPrev}: AuthContentProps)
           <Button
             type="submit"
             form="auth-step-form"
-            variant={step === 1 ? "icon-secondary" : "icon-primary"}
+            variant={step === 1 ? "icon-big-secondary" : "icon-big-primary"}
             error={isError}
             disabled={isLoading}
           >

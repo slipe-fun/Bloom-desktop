@@ -2,7 +2,7 @@ import {forwardRef} from 'react';
 import {HTMLMotionProps, motion} from "framer-motion";
 
 export interface ButtonProps extends HTMLMotionProps<'button'> {
-  variant?: 'primary' | 'icon-primary' | 'icon-secondary';
+  variant?: 'primary' | 'icon-big-primary' | 'icon-big-secondary';
   error?: boolean;
 }
 
@@ -21,10 +21,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       primary: `
         w-full bg-primary text-md font-semibold text-white
       `,
-      'icon-primary': `
+      'icon-big-primary': `
         aspect-square bg-primary shadow-md text-white
       `,
-      'icon-secondary': `
+      'icon-big-secondary': `
         aspect-square bg-background text-text-content shadow-md
       `,
     };
