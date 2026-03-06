@@ -141,6 +141,7 @@ export default function AuthEmail({
           setEmail(e.target.value);
           if (isError) setError(false);
         }}
+        variant='secondary'
         placeholder="example@gmail.com"
         type="email"
         error={isError}

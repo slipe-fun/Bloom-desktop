@@ -51,6 +51,7 @@ export default function AuthSignUp({onNext, isError, errorMsg, setError}: AuthSi
         type="password"
         placeholder="Пароль"
         icon="lock"
+        variant='secondary'
         error={isError}
         onChange={(e) => {
           setPassword(e.target.value);
@@ -61,6 +62,7 @@ export default function AuthSignUp({onNext, isError, errorMsg, setError}: AuthSi
         value={nickname}
         placeholder="Никнейм"
         icon="person"
+        variant='secondary'
         error={isError}
         onChange={(e) => {
           setNickname(e.target.value);

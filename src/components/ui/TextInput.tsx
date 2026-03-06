@@ -6,21 +6,32 @@ export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?: keyof typeof ICONS;
   error?: boolean;
   leftElement?: ReactNode;
+  variant?: 'primary' | 'secondary';
 }
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-  ({icon = 'at', leftElement, error, className = '', value, type, ...props}, ref) => {
+  ({icon = 'at', variant = 'primary', leftElement, error, className = '', value, type, ...props}, ref) => {
     const [showPassword, setShowPassword] = useState(false);
     const hasText = Boolean(value || props.defaultValue);
     const isPasswordInput = type === 'password';
     const inputType = isPasswordInput ? (showPassword ? 'text' : 'password') : type;
 
+    const baseStyles = `
+      flex h-xxxxl w-full items-center rounded-full transition-shadow
+      ${error ? 'ring-2 !ring-backdrop-red' : ''}
+      ${!isPasswordInput ? 'pr-xxxxl' : 'pr-2'}
+    `;
+
+    const varians = {
+      primary: 'bg-background border border-border',
+      secondary: 'bg-foreground-soft',
+    }
+
     return (
       <div
         className={`
-          flex h-xxxxl w-full items-center rounded-full bg-foreground-soft transition-shadow
-          ${error ? 'ring-2 !ring-backdrop-red' : ''}
-          ${!isPasswordInput ? 'pr-xxxxl' : 'pr-2'}
+          ${baseStyles}
+          ${varians[variant]}
           ${className}
         `}
       >
