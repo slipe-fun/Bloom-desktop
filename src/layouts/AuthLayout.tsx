@@ -4,7 +4,7 @@ import {AuthFooter} from "../components/auth/AuthFooter.tsx";
 import {AuthContent} from "../components/auth/AuthContent.tsx";
 import {useNavigate} from "react-router-dom";
 
-export function Auth() {
+export function AuthLayout() {
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const navigate = useNavigate();
