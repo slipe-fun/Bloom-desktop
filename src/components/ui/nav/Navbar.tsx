@@ -1,29 +1,19 @@
 import {NavbarElement} from "./NavbarElement.tsx";
-import {ICONS} from "../../../constants/icons.ts";
+import {NAV_LINKS} from "../../../constants/nav.ts";
+import {useLocation, useNavigate} from "react-router-dom";
 
-type NavTab = keyof typeof ICONS;
+export default function Navbar() {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-interface NavbarProps {
-  activeTab: NavTab;
-  onTabChange: (tab: NavTab) => void;
-}
-
-const NAV_ITEMS: NavTab[] = [
-  'person.circle',
-  'compass',
-  'message',
-  'gear'
-];
-
-export default function Navbar({activeTab, onTabChange}: NavbarProps) {
   return (
     <nav className="w-full flex items-center rounded-full gap-xs p-xs border border-border bg-background shadow-shadow">
-      {NAV_ITEMS.map((icon) => (
+      {NAV_LINKS.map(({icon, path}) => (
         <NavbarElement
           key={icon}
           icon={icon}
-          isSelected={activeTab === icon}
-          onClick={() => onTabChange(icon)}
+          isSelected={location.pathname.startsWith(path)}
+          onClick={() => navigate(path)}
         />
       ))}
     </nav>
