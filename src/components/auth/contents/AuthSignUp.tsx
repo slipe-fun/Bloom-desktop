@@ -1,24 +1,26 @@
 import TextInput from "../../ui/TextInput.tsx";
 import React, {useState} from "react";
 import AuthContainer from "../AuthContainer.tsx";
+import {authApi} from "../../../api/auth.ts";
 
 interface AuthSignUpProps {
+  email: string;
   onNext: () => void;
   isError: boolean;
   errorMsg: string;
   setError: (val: string | boolean) => void;
 }
 
-export default function AuthSignUp({onNext, isError, errorMsg, setError}: AuthSignUpProps) {
+export default function AuthSignUp({email, onNext, isError, errorMsg, setError}: AuthSignUpProps) {
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isLoading) return;
 
-    const isNicknameValid = nickname.trim().length > 0;
-
-    if (!isNicknameValid) {
+    if (nickname.trim().length === 0) {
       setError("Никнейм не может быть пустым");
       return;
     }
@@ -28,8 +30,17 @@ export default function AuthSignUp({onNext, isError, errorMsg, setError}: AuthSi
       return;
     }
 
-    // TODO: Api call and register
-    onNext();
+    setIsLoading(true);
+    setError(false);
+
+    try {
+      await authApi.completeSignUp(email, nickname, password);
+      onNext();
+    } catch (error: any) {
+      setError(error.message || "Ошибка при сохранении данных");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

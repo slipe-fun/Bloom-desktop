@@ -5,10 +5,7 @@ import AuthContainer from "../AuthContainer.tsx";
 import Icon from "../../ui/Icon.tsx";
 import parseEmail from "../../../lib/parseEmail.ts";
 import {PROVIDERS_LOGOS} from "../../../constants/providerLogos.ts";
-import axios from "axios";
-import {API_URL} from "../../../constants/api_url.ts";
-
-const ENABLE_API = import.meta.env.VITE_ENABLE_API === 'true';
+import {authApi} from "../../../api/auth.ts";
 
 interface AuthEmailProps {
   email: string;
@@ -62,30 +59,9 @@ export default function AuthEmail({
     setLoading(true);
     setError(false);
 
-    if (!ENABLE_API) {
-      console.log("[DEV] API disabled. Mocking success for:", email);
-      await new Promise(resolve => setTimeout(resolve, 600));
-      setLoading(false);
-      onNext();
-      return;
-    }
-
     try {
-      const existsRes = await axios.get(`${API_URL}/user/exists`, {
-        params: {email}
-      });
-
-      const exists = existsRes.data?.exists;
-
-      if (exists) {
-        await axios.post(`${API_URL}/auth/request-code`, {email});
-      } else {
-        const regRes = await axios.post(`${API_URL}/auth/register`, {email});
-        if (regRes.data?.error) {
-          throw new Error('Failed to register');
-        }
-        onNext();
-      }
+      await authApi.processEmail(email);
+      onNext();
     } catch (error: any) {
       console.error("Auth Error:", error);
       setError("Ошибка соединения с сервером. Попробуйте позже.");

@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {AnimatePresence, motion} from "framer-motion";
 import AuthContainer from "../AuthContainer.tsx";
+import {authApi} from "../../../api/auth.ts";
 
 const springy = {
   type: "spring" as const,
@@ -10,15 +11,17 @@ const springy = {
 };
 
 interface AuthVerifyProps {
+  email: string;
   onNext: () => void;
   isError: boolean;
   errorMsg: string;
   setError: (val: string | boolean) => void;
 }
 
-export default function AuthVerify({onNext, isError, errorMsg, setError}: AuthVerifyProps) {
+export default function AuthVerify({email, onNext, isError, errorMsg, setError}: AuthVerifyProps) {
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const length = 6;
@@ -34,18 +37,20 @@ export default function AuthVerify({onNext, isError, errorMsg, setError}: AuthVe
     }
   }, [isComplete]);
 
-  const handleSubmit = (e?: React.FormEvent) => {
+  const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (value.length < length) {
-      setError("Код должен состоять из 6 цифр");
-      return;
-    }
+    if (value.length < length || isLoading) return;
 
-    if (value !== "123456") {
-      setError("Неверный код подтверждения");
-    } else {
-      setError(false);
+    setIsLoading(true);
+    setError(false);
+
+    try {
+      await authApi.verifyCode(email, value);
       onNext();
+    } catch (error: any) {
+      setError(error.message || "Неверный код подтверждения");
+    } finally {
+      setIsLoading(false);
     }
   };
 
