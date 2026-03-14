@@ -38,15 +38,14 @@ export const authApi = {
   },
 
   verifyCode: async (email: string, code: string) => {
-    return api.request(
-      {},
-      async () => {
-        if (code !== "123456") {
-          throw new Error("Неверный код подтверждения");
-        }
-        return {success: true, token: "mock_token_123"};
-      }
-    );
+    return await api.request(
+        {
+          method: "POST",
+          url: `${API_URL}/auth/verify-code`,
+          data: {email, code},
+        },
+        async () => ({success: true, session_id: 5, user: {id: 4, date: new Date(), username: "hello"}, token: "mock_token_123"})
+      );
   },
 
   completeSignUp: async (email: string, nickname: string, password: string) => {

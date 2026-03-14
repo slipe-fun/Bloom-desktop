@@ -110,6 +110,7 @@ export function AuthContent({step, direction, onNext, onPrev}: AuthContentProps)
             )}
             {step === 1 && (
               <AuthVerify
+                email={email}
                 onNext={onNext}
                 setError={handleSetError}
                 isError={isError}

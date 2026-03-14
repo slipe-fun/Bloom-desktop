@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {AnimatePresence, motion} from "framer-motion";
 import AuthContainer from "../AuthContainer.tsx";
 import {authApi} from "../../../api/auth.ts";
+import { load } from '@tauri-apps/plugin-store';
 
 const springy = {
   type: "spring" as const,
@@ -45,10 +46,21 @@ export default function AuthVerify({email, onNext, isError, errorMsg, setError}:
     setError(false);
 
     try {
-      await authApi.verifyCode(email, value);
+      const authResponse = await authApi.verifyCode(email, value)
+
+      if (authResponse) {
+        const store = await load('store.json', { autoSave: false });
+
+        await store.set('token', { value: authResponse?.token });
+        await store.set('user', { value: authResponse?.user });
+        await store.set('session_id', { value: authResponse?.session_id });
+
+        await store.save();
+      }
+
       onNext();
     } catch (error: any) {
-      setError(error.message || "Неверный код подтверждения");
+      setError(error?.response?.status === 400 ? "Неверный код подтверждения" : (error?.response?.data?.message || error?.message));
     } finally {
       setIsLoading(false);
     }
