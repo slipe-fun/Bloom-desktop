@@ -6,6 +6,7 @@ export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?: keyof typeof ICONS;
   error?: boolean;
   leftElement?: ReactNode;
+  rightElement?: ReactNode;
   variant?: 'primary' | 'secondary';
   placeholderIcon?: keyof typeof ICONS;
   placeholderAlign?: 'left' | 'center' | 'right';
@@ -16,6 +17,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
      icon,
      variant = 'primary',
      leftElement,
+     rightElement,
      error,
      className = '',
      value,
@@ -31,9 +33,11 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const inputType = isPasswordInput ? (showPassword ? 'text' : 'password') : type;
 
     const hasLeft = Boolean(icon || leftElement);
+    const hasRight = Boolean(rightElement) || isPasswordInput;
+
     const paddingStyles = `
-      ${!hasLeft ? 'pl-xxxxl' : 'pl-2'}
-      ${!isPasswordInput ? 'pr-xxxxl' : 'pr-2'}
+      ${!hasLeft ? 'pl-lg' : 'pl-0'}
+      ${!hasRight ? 'pr-lg' : 'pr-0'}
     `;
 
     const baseStyles = `
@@ -102,6 +106,12 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             )}
           </div>
         </div>
+
+        {rightElement && !isPasswordInput && (
+          <div className="flex aspect-square h-full shrink-0 items-center justify-center relative">
+            {rightElement}
+          </div>
+        )}
 
         {isPasswordInput && (
           <button

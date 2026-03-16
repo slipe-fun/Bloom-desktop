@@ -17,8 +17,8 @@ interface ChatListItemProps {
 }
 
 export default function ChatListItem({
-                                       name = "Сохраненные сообщения",
-                                       lastMessage = "Hello, how are you?",
+                                       name = "name",
+                                       lastMessage = "text",
                                        lastMessageUserName,
                                        lastMessageUserColor = "text-text-main",
                                        time = "00:00",
@@ -58,7 +58,7 @@ export default function ChatListItem({
             </h3>
 
             {isMuted && (
-              <Icon icon="bell" size={16} className="text-text-secondary shrink-0"/>
+              <Icon icon="bell.slashed" size={16} className="text-text-secondary shrink-0"/>
             )}
           </div>
 

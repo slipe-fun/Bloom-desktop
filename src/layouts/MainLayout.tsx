@@ -1,8 +1,10 @@
 import {useCallback, useEffect, useState} from "react";
 import ChatSidebar from "../pages/chat/ChatSidebar.tsx";
-import {Navigate, Outlet, Route, Routes} from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 import Navbar from "../components/ui/nav/Navbar.tsx";
 import NothingThere from "../pages/NothingThere.tsx";
+import NoSelectedChatContent from "../pages/chat/NoSelectedChatContent.tsx";
+import ChatPage from "../pages/chat/ChatPage.tsx";
 
 const MIN_SIDEBAR_WIDTH = 250;
 const MAX_SIDEBAR_WIDTH = 600;
@@ -71,7 +73,18 @@ export function MainLayout() {
 
       <main
         className={`h-full flex-1 bg-foreground-soft flex flex-col relative min-w-[300px] ${isResizing ? "pointer-events-none" : ""}`}>
-        <Outlet/>
+        <Routes>
+          <Route path="chats">
+            <Route index element={<NoSelectedChatContent/>}/>
+            <Route path=":id" element={<ChatPage/>}/>
+          </Route>
+
+          <Route path="settings/*" element={<NothingThere/>}/>
+          <Route path="discover/*" element={<NothingThere/>}/>
+          <Route path="profile/*" element={<NothingThere/>}/>
+
+          <Route path="*" element={<Navigate to="chats" replace/>}/>
+        </Routes>
       </main>
     </div>
   );
