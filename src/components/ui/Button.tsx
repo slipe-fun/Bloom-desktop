@@ -22,13 +22,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         h-smsuper w-full bg-primary text-md font-semibold text-white
       `,
       'icon-big-primary': `
-        h-super aspect-square bg-primary shadow-shadow text-white
+        h-super min-w-super bg-primary shadow-shadow text-white
       `,
       'icon-big-secondary': `
-        h-super aspect-square bg-background text-text-content shadow-shadow
+        h-super min-w-super bg-background text-text-content shadow-shadow
       `,
       'icon-secondary': `
-        h-smsuper aspect-square bg-background text-text-main shadow-shadow border border-border
+        h-smsuper min-w-smsuper bg-background text-text-main shadow-shadow border border-border
       `,
     };
 
