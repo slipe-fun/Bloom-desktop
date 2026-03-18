@@ -45,6 +45,8 @@
   --theme-foreground-blur: #8080801a;
   --theme-gradient-blur: #ffffffd9;
   --theme-border: #0000001a;
+  --theme-gradient-start: #ffffffcc;
+  --theme-gradient-end: #ffffff00;
 }
 
 :root[data-theme="dark"] {
@@ -60,6 +62,8 @@
   --theme-foreground-blur: #80808033;
   --theme-gradient-blur: #000000d9;
   --theme-border: #ffffff1a;
+  --theme-gradient-start: #000000cc;
+  --theme-gradient-end: #00000000;
 }
 
 @theme {
@@ -74,6 +78,8 @@
   --color-indicator: var(--theme-indicator);
   --color-foreground-blur: var(--theme-foreground-blur);
   --color-gradient-blur: var(--theme-gradient-blur);
+  --color-gradient-start: var(--theme-gradient-start);
+  --color-gradient-end: var(--theme-gradient-end);
   --color-border: var(--theme-border);
 
   --color-white: #ffffff;
