@@ -4,6 +4,7 @@ import {MessageType} from "../../types/chat.ts";
 import {chatsApi} from "../../api/chats.ts";
 import ChatFooter from "../../components/main/chat/ChatFooter.tsx";
 import ChatMessage from "../../components/main/chat/ChatMessage.tsx";
+import ChatHeader from "../../components/main/chat/ChatHeader.tsx";
 
 export default function ChatPage() {
   const {id} = useParams();
@@ -22,6 +23,8 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-col h-full w-full bg-background relative">
+      <ChatHeader/>
+
       <div className="flex-1 overflow-y-auto px-lg flex flex-col gap-lg justify-end">
         {isLoading ? (
           // TODO
