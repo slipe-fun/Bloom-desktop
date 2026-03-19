@@ -5,7 +5,7 @@ export default function ChatHeader() {
   return (
     <header
       className="w-full sticky top-0 z-10 flex justify-between p-lg pb-xxl bg-gradient-to-b from-gradient-start to-gradient-end">
-      <div className="flex-1 flex items-center justify-start">
+      <div className="flex-1 flex items-start justify-start">
         <Button variant='icon-secondary' className="pr-[10px]">
           <Icon size={26} icon='chevron.left' className="text-text-main"/>
           <div
@@ -16,7 +16,6 @@ export default function ChatHeader() {
       </div>
 
       <div className="flex-none relative w-super h-super">
-
         <svg viewBox="0 0 52 52" className="w-full h-full overflow-visible">
           <defs>
             <mask id="avatar-cutout">
@@ -42,7 +41,7 @@ export default function ChatHeader() {
 
       </div>
 
-      <div className="flex-1 flex items-center justify-end">
+      <div className="flex-1 flex items-start justify-end">
         <Button variant='icon-secondary'>
           <Icon size={26} icon='waveform' className="text-text-main"/>
         </Button>
