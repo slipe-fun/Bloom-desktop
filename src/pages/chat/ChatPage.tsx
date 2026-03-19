@@ -22,11 +22,11 @@ export default function ChatPage() {
   }, [id]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-background relative">
+    <div className="flex flex-col h-full w-full bg-background relative overflow-hidden">
       <ChatHeader/>
 
       <div
-        className="flex-1 overflow-y-auto px-lg flex flex-col-reverse gap-lg"
+        className="flex-1 h-full w-full overflow-y-auto overflow-x-hidden flex flex-col-reverse px-lg pt-[90px] pb-[100px] gap-lg custom-scrollbar"
       >
         {isLoading ? (
           <div className="text-center text-text-secondary mt-10">Загрузка сообщений...</div>

@@ -4,7 +4,8 @@ import Button from "../../ui/Button.tsx";
 
 export default function ChatFooter() {
   return (
-    <footer className="w-full flex p-lg pb-xxxl gap-lg">
+    <footer
+      className="absolute bottom-0 left-0 right-0 z-20 w-full flex p-lg pb-xxxl gap-lg bg-gradient-to-t from-gradient-start to-gradient-end">
       <Button variant='icon-secondary'>
         <Icon size={26} icon='dots'/>
       </Button>

@@ -4,7 +4,7 @@ import Icon from "../../ui/Icon.tsx";
 export default function ChatHeader() {
   return (
     <header
-      className="w-full sticky top-0 z-10 flex justify-between p-lg pb-xxl bg-gradient-to-b from-gradient-start to-gradient-end">
+      className="w-full absolute top-0 left-0 z-10 flex justify-between p-lg pb-xxl bg-gradient-to-b from-gradient-start to-gradient-end">
       <div className="flex-1 flex items-start justify-start">
         <Button variant='icon-secondary' className="pr-[10px]">
           <Icon size={26} icon='chevron.left' className="text-text-main"/>
