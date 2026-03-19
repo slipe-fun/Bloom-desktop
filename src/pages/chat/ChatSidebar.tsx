@@ -21,7 +21,7 @@ export default function ChatSidebar() {
 
 
   return (
-    <div className="flex flex-col w-full h-full flex-1 min-w-0 border-r border-border">
+    <div className="flex flex-col w-full h-full flex-1 min-w-0">
       <ChatTopbar/>
 
       <section className="flex flex-col flex-1 w-full h-full overflow-y-auto overflow-x-hidden">
