@@ -25,16 +25,22 @@ export default function ChatPage() {
     <div className="flex flex-col h-full w-full bg-background relative">
       <ChatHeader/>
 
-      <div className="flex-1 overflow-y-auto px-lg flex flex-col gap-lg justify-end">
+      <div
+        className="flex-1 overflow-y-auto px-lg flex flex-col-reverse gap-lg"
+      >
         {isLoading ? (
-          // TODO
           <div className="text-center text-text-secondary mt-10">Загрузка сообщений...</div>
         ) : messages.length === 0 ? (
-          // TODO
           <div className="text-center text-text-secondary mt-10">No messages here yet...</div>
         ) : (
           messages.map((msg) => (
-            <ChatMessage content={msg.text} isMine={msg.isMine} time={msg.time} isNew={msg.isNew}/>
+            <ChatMessage
+              key={msg.id}
+              content={msg.text}
+              isMine={msg.isMine}
+              time={msg.time}
+              isNew={msg.isNew}
+            />
           ))
         )}
       </div>
