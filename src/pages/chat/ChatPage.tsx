@@ -5,6 +5,7 @@ import {chatsApi} from "../../api/chats.ts";
 import ChatFooter from "../../components/main/chat/ChatFooter.tsx";
 import ChatMessage from "../../components/main/chat/ChatMessage.tsx";
 import ChatHeader from "../../components/main/chat/ChatHeader.tsx";
+import NoMessages from "../../components/main/chat/NoMessages.tsx";
 
 export default function ChatPage() {
   const {id} = useParams();
@@ -29,9 +30,13 @@ export default function ChatPage() {
         className="flex-1 h-full w-full overflow-y-auto overflow-x-hidden flex flex-col-reverse px-lg pt-[90px] pb-[100px] gap-lg custom-scrollbar"
       >
         {isLoading ? (
-          <div className="text-center text-text-secondary mt-10">Загрузка сообщений...</div>
+          <div className="flex-1 w-full flex items-center justify-center text-text-secondary">
+            Загрузка сообщений...
+          </div>
         ) : messages.length === 0 ? (
-          <div className="text-center text-text-secondary mt-10">No messages here yet...</div>
+          <div className="flex-1 w-full flex items-center justify-center text-text-secondary">
+            <NoMessages/>
+          </div>
         ) : (
           messages.map((msg) => (
             <ChatMessage
