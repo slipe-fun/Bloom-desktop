@@ -38,7 +38,7 @@ export function NavbarElement({icon, isSelected = false, onClick}: NavbarElement
       {isSelected && (
         <motion.div
           layoutId="nav-highlight"
-          className="absolute inset-0 bg-foreground-soft rounded-full shadow-sm"
+          className="absolute inset-0 bg-foreground-soft rounded-full"
           transition={{type: "spring", bounce: 0.2, duration: 0.6}}
         />
       )}
