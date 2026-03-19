@@ -24,7 +24,7 @@ export default function ChatSidebar() {
     <div className="flex flex-col w-full h-full flex-1 min-w-0">
       <ChatTopbar/>
 
-      <section className="flex flex-col flex-1 w-full h-full overflow-y-auto overflow-x-hidden">
+      <section className="flex flex-col flex-1 w-full h-full overflow-y-auto overflow-x-hidden custom-scrollbar">
         {isLoading ? (
           <div className="p-4 text-text-secondary text-center">Загрузка чатов...</div>
         ) : (
