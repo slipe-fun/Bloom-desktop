@@ -1,17 +1,17 @@
-import {useCallback, useEffect, useState} from "react";
-import ChatSidebar from "../pages/chat/ChatSidebar.tsx";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {Navigate, Route, Routes} from "react-router-dom";
 import Navbar from "../components/ui/nav/Navbar.tsx";
 import NothingThere from "../pages/NothingThere.tsx";
 import NoSelectedChatContent from "../pages/chat/NoSelectedChatContent.tsx";
 import ChatPage from "../pages/chat/ChatPage.tsx";
+import ChatSidebar from "../pages/chat/ChatSidebar.tsx";
 
 const MIN_SIDEBAR_WIDTH = 250;
 const MAX_SIDEBAR_WIDTH = 600;
 const DEFAULT_SIDEBAR_WIDTH = 384;
 
 export function MainLayout() {
-  const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_SIDEBAR_WIDTH);
+  const sidebarRef = useRef<HTMLElement>(null);
   const [isResizing, setIsResizing] = useState(false);
 
   const startResizing = useCallback(() => {
@@ -25,10 +25,12 @@ export function MainLayout() {
   const resize = useCallback(
     (mouseMoveEvent: MouseEvent) => {
       if (isResizing) {
+        if (!isResizing || !sidebarRef.current) return;
+
         const newWidth = mouseMoveEvent.clientX;
 
         const constrainedWidth = Math.max(MIN_SIDEBAR_WIDTH, Math.min(MAX_SIDEBAR_WIDTH, newWidth));
-        setSidebarWidth(constrainedWidth);
+        sidebarRef.current.style.width = `${constrainedWidth}px`;
       }
     }, [isResizing]
   );
@@ -37,6 +39,11 @@ export function MainLayout() {
     if (isResizing) {
       window.addEventListener("mousemove", resize);
       window.addEventListener("mouseup", stopResizing);
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+    } else {
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
     }
 
     return () => {
@@ -49,8 +56,9 @@ export function MainLayout() {
     <div
       className={`size-full flex relative overflow-hidden bg-background text-text-main ${isResizing ? "select-none cursor-col-resize" : ""}`}>
       <aside
+        ref={sidebarRef}
         className="h-full flex flex-col select-none"
-        style={{width: sidebarWidth}}
+        style={{width: DEFAULT_SIDEBAR_WIDTH}}
       >
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
           <Routes>
@@ -68,7 +76,7 @@ export function MainLayout() {
 
       <div
         onMouseDown={startResizing}
-        className="w-1 -ml-[3px] h-full cursor-col-resize z-10 bg-transparent active:bg-primary transition-colors shrink-0"
+        className="w-1 -ml-[3px] h-full cursor-col-resize z-10 bg-transparent hover:bg-primary active:bg-primary transition-colors shrink-0"
       />
 
       <main
