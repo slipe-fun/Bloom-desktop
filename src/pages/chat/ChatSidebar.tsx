@@ -4,6 +4,7 @@ import ChatTopbar from "../../components/main/chat/ChatTopbar.tsx";
 import ChatListItem from "../../components/main/chat/ChatListItem.tsx";
 import {chatsApi} from "../../api/chats.ts";
 import {ChatType} from "../../types/chat.ts";
+import EmptyChatsSide from "../../components/main/chat/EmptyChatsSide.tsx";
 
 export default function ChatSidebar() {
   const [chats, setChats] = useState<ChatType[]>([]);
@@ -26,7 +27,11 @@ export default function ChatSidebar() {
 
       <section className="flex flex-col flex-1 w-full h-full overflow-y-auto overflow-x-hidden custom-scrollbar">
         {isLoading ? (
-          <div className="p-4 text-text-secondary text-center">Загрузка чатов...</div>
+          <div className="p-4 text-text-secondary text-center">
+            Загрузка чатов...
+          </div>
+        ) : chats.length === 0 ? (
+          <EmptyChatsSide/>
         ) : (
           chats.map((chat) => {
             const isActive = location.pathname === `/chats/${chat.id}`;

@@ -273,7 +273,12 @@ export const chatsApi = {
   getChats: async (): Promise<ChatType[]> => {
     return api.request<ChatType[]>(
       {url: "/api/chats", method: "GET"},
-      () => MOCK_CHATS
+      () => {
+        if (import.meta.env.VITE_MOCK_EMPTYCHATS === "true") {
+          return [];
+        }
+        return MOCK_CHATS;
+      }
     );
   },
 
