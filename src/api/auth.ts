@@ -47,11 +47,4 @@ export const authApi = {
         async () => ({success: true, session_id: 5, user: {id: 4, date: new Date(), username: "hello"}, token: "mock_token_123"})
       );
   },
-
-  completeSignUp: async (email: string, nickname: string, password: string) => {
-    return api.request(
-      {},
-      async () => ({success: true})
-    );
-  },
 };

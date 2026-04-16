@@ -1,7 +1,10 @@
 import TextInput from "../../ui/TextInput.tsx";
 import React, {useState} from "react";
 import AuthContainer from "../AuthContainer.tsx";
-import {authApi} from "../../../api/auth.ts";
+import { keysDumpApi } from "../../../api/keysDump.ts";
+import { load } from '@tauri-apps/plugin-store';
+import { decryptKeys, hashPassword } from "../../../lib/skid/keyEncryption.ts";
+import base64ToBytes from "../../../lib/skid/utils/base64ToBytes.ts";
 
 interface AuthSignUpProps {
   email: string;
@@ -34,9 +37,20 @@ export default function AuthSignUp({email, onNext, isError, errorMsg, setError}:
     setError(false);
 
     try {
-      await authApi.completeSignUp(email, nickname, password);
+      const store = await load('store.json', { autoSave: false });
+      const token = await store.get('token');
+
+      const keys = await keysDumpApi.get(token?.value)
+
+      const passwordHash = await hashPassword(password, keys?.salt ? base64ToBytes(keys?.salt) : undefined)
+
+      const decryptedKeys = decryptKeys(passwordHash.hash, keys?.ciphertext, keys?.nonce)
+
+      console.log(decryptedKeys)
+
       onNext();
     } catch (error: any) {
+      console.log(error)
       setError(error.message || "Ошибка при сохранении данных");
     } finally {
       setIsLoading(false);
