@@ -11,7 +11,7 @@ export function AuthLayout() {
 
   const handleNext = () => {
     if (step === 2) {
-      navigate("/main");
+      //navigate("/main");
       return;
     }
 

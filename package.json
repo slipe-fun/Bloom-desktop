@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "@noble/ciphers": "^2.1.1",
+    "@noble/curves": "^2.2.0",
+    "@noble/ed25519": "^3.1.0",
     "@noble/hashes": "^2.0.1",
+    "@noble/post-quantum": "^0.6.1",
     "@tailwindcss/vite": "^4.2.1",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
