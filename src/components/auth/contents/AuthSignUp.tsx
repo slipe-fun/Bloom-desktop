@@ -5,6 +5,12 @@ import { keysDumpApi } from "../../../api/keysDump.ts";
 import { load } from '@tauri-apps/plugin-store';
 import { decryptKeys, hashPassword } from "../../../lib/skid/keyEncryption.ts";
 import base64ToBytes from "../../../lib/skid/utils/base64ToBytes.ts";
+import {
+  getSecureStorageStatus,
+  initializeSecureStorage,
+  setSecret,
+  unlockSecureStorage,
+} from "../../../lib/native/secureStorage.ts";
 
 interface AuthSignUpProps {
   email: string;
@@ -37,7 +43,7 @@ export default function AuthSignUp({email, onNext, isError, errorMsg, setError}:
     setError(false);
 
     try {
-      const store = await load('store.json', { autoSave: false });
+      const store = await load('store.json', { autoSave: false, defaults: {} });
       const token = await store.get('token');
 
       const keys = await keysDumpApi.get(token?.value)
@@ -46,12 +52,25 @@ export default function AuthSignUp({email, onNext, isError, errorMsg, setError}:
 
       const decryptedKeys = decryptKeys(passwordHash.hash, keys?.ciphertext, keys?.nonce)
 
-      console.log(decryptedKeys)
+      if (decryptedKeys) {
+        const secureStorageStatus = await getSecureStorageStatus();
+
+        if (secureStorageStatus.initialized) {
+          await unlockSecureStorage(password);
+        } else {
+          await initializeSecureStorage(password);
+        }
+
+        await Promise.all(
+          decryptedKeys.map((chat) =>
+            setSecret(`chat:${chat.id}`, "chat_key", base64ToBytes(chat.key))
+          )
+        );
+      }
 
       onNext();
     } catch (error: any) {
-      console.log(error)
-      setError(error.message || "Ошибка при сохранении данных");
+      setError(error.message || error || "Ошибка при сохранении данных");
     } finally {
       setIsLoading(false);
     }
