@@ -94,7 +94,7 @@ export function Titlebar() {
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
               className="inline-flex h-10.5 will-change-transform w-10.5 group transition-colors items-center rounded-full justify-center text-muted-foreground"
             >
-              <X className="h-4.5 w-4.5 group-hover:text-red-600 transition-colors text-foreground" />
+              <X className="h-4.5 w-4.5 group-hover:text-red-500 transition-colors text-foreground" />
             </motion.button>
           </div>
         )}
