@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import LineHorizontal from "@/assets/icons/line.horizontal.svg?react"
 import RectangleStroke from "@/assets/icons/rectangle.stroke.svg?react"
 import X from "@/assets/icons/x.svg?react"
+import Logo from "@/assets/logo.png"
 import { motion } from "framer-motion"
 import { getCurrentWindow } from "@tauri-apps/api/window"
 import { type } from "@tauri-apps/plugin-os"
@@ -43,10 +44,8 @@ export function Titlebar() {
         </div>
       )}
 
-      <div data-tauri-drag-region className="flex cursor-default justify-center absolute w-full items-center gap-2">
-        <div className="flex h-4 w-4 items-center justify-center rounded-full bg-linear-to-tr from-pink-500 via-red-400 to-yellow-300 text-[10px]">
-          🌸
-        </div>
+      <div data-tauri-drag-region className="flex cursor-default justify-center absolute w-full items-center gap-1.75">
+        <img src={Logo} alt="Bloom Logo" className="h-5 w-5" />
         <span className="text-base font-bold tracking-tight">Bloom</span>
       </div>
 
