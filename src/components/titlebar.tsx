@@ -7,7 +7,6 @@ import { getCurrentWindow } from "@tauri-apps/api/window"
 import { type } from "@tauri-apps/plugin-os"
 
 export function Titlebar() {
-  const [isMaximized, setIsMaximized] = useState(false)
   const [isMac, setIsMac] = useState(false)
 
   const appWindow = getCurrentWindow()
@@ -16,7 +15,6 @@ export function Titlebar() {
 
   const handleToggleMaximize = async () => {
     await appWindow.toggleMaximize()
-    setIsMaximized(await appWindow.isMaximized())
   }
 
   const handleClose = () => appWindow.close()
@@ -31,20 +29,7 @@ export function Titlebar() {
       }
     }
 
-    const updateMaximized = async () => {
-      setIsMaximized(await appWindow.isMaximized())
-    }
-
     checkOS()
-    updateMaximized()
-
-    const unlisten = appWindow.onResized(() => {
-      updateMaximized()
-    })
-
-    return () => {
-      unlisten.then((f) => f && f())
-    }
   }, [])
 
   return (

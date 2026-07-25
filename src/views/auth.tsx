@@ -1,6 +1,7 @@
 import { AuthActions } from "@/components/auth/actions"
 import { AuthQrMethod } from "@/components/auth/qr-method"
 import { AuthSeedMethod } from "@/components/auth/seed-method"
+import { AuthSignUpMethod } from "@/components/auth/sign-up-method"
 import { EASING } from "@/constants/animations-easing"
 import { authStore } from "@/store/auth.store"
 import { AnimatePresence, motion } from "framer-motion"
@@ -15,6 +16,8 @@ export function Auth() {
         return <AuthQrMethod />
       case "seed":
         return <AuthSeedMethod />
+      case "signUp":
+        return <AuthSignUpMethod />
       default:
         return null
     }
