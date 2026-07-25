@@ -18,6 +18,7 @@ function PureQRCode({
   data = "bloom://auth?t=AQJP12NqtpWvZsdfXf5GM8kompGwOkNjYxODam",
 }: QRCodeProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const qrCodeRef = useRef<QRCodeStyling | null>(null)
 
   useEffect(() => {
     const qrCode = new QRCodeStyling({
@@ -56,9 +57,23 @@ function PureQRCode({
       },
     })
 
+    qrCodeRef.current = qrCode
+
     if (ref.current) {
       ref.current.innerHTML = ""
       qrCode.append(ref.current)
+    }
+
+    return () => {
+      if (ref.current) {
+        ref.current.innerHTML = ""
+      }
+    }
+  }, []) 
+
+  useEffect(() => {
+    if (qrCodeRef.current) {
+      qrCodeRef.current.update({ data })
     }
   }, [data])
 
@@ -80,7 +95,7 @@ export function AnimatedQRCode({ data }: QRCodeProps) {
           filter: "blur(3px)",
         }}
         transition={EASING.springyTimed}
-        className="absolute right-0 h-23 w-23 rotate-17 text-blue-500 -translate-x-[30px] -translate-y-[50px]"
+        className="absolute right-0 h-23 w-23 rotate-17 text-blue-500 -translate-x-7.5 -translate-y-12.5"
       />
       <MotionFaceID
         initial={{
@@ -114,7 +129,7 @@ export function AnimatedQRCode({ data }: QRCodeProps) {
           ...EASING.springyTimed,
           delay: 0.1,
         }}
-        className="absolute right-0 bottom-0 h-20.5 w-20.5 rotate-11 text-orange-500 translate-x-[45px] translate-y-[9px]"
+        className="absolute right-0 bottom-0 h-20.5 w-20.5 rotate-11 text-orange-500 translate-x-11.25 translate-y-2.25"
       />
       <motion.div
         initial={{

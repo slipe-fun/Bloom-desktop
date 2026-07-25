@@ -1,0 +1,20 @@
+import { SeedPhraseInput } from "@/components/auth/seed-phrase-input"
+
+export function AuthSeedMethod() {
+  return (
+    <>
+      <div className="flex max-w-100 flex-col items-center justify-center gap-2">
+        <h2 className="text-center text-2xl font-bold text-foreground">
+          Log in via Seed phrase
+        </h2>
+
+        <p className="text-center text-base font-medium text-foreground/40">
+          Enter your 12-word seed phrase, or drag and drop a file with seed
+          phrase
+        </p>
+      </div>
+
+      <SeedPhraseInput />
+    </>
+  )
+}
