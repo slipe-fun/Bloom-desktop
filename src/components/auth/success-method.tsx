@@ -44,7 +44,7 @@ export function AuthSuccessMethod() {
         />
         <Avatar className="size-35">
           <AvatarImage
-            src="https://i.pinimg.com/736x/98/26/5b/98265b01771083f8c6e6472fc170a682.jpg"
+            src="https://github.com/shadcn.png"
             alt="Dikiy Dikiens"
           />
           <AvatarFallback className="text-4xl">DD</AvatarFallback>
