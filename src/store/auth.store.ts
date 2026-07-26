@@ -5,11 +5,13 @@ type AuthMethod = "seed" | "qr" | "success" | "signUp"
 interface AuthStore {
   seedPhrase: string[]
   method: AuthMethod
+  loading: boolean
 }
 
 export const authStore = proxy<AuthStore>({
   seedPhrase: Array(12).fill(""),
   method: "qr",
+  loading: false
 })
 
 export const authActions = {
@@ -19,4 +21,7 @@ export const authActions = {
   setSeedPhrase: (seedPhrase: string[]) => {
     authStore.seedPhrase = seedPhrase
   },
+  setLoading: (loading: boolean) => {
+    authStore.loading = loading
+  }
 }

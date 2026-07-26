@@ -2,6 +2,7 @@ import { AuthActions } from "@/components/auth/actions"
 import { AuthQrMethod } from "@/components/auth/qr-method"
 import { AuthSeedMethod } from "@/components/auth/seed-method"
 import { AuthSignUpMethod } from "@/components/auth/sign-up-method"
+import { AuthSuccessMethod } from "@/components/auth/success-method"
 import { EASING } from "@/constants/animations-easing"
 import { authStore } from "@/store/auth.store"
 import { AnimatePresence, motion } from "framer-motion"
@@ -18,6 +19,8 @@ export function Auth() {
         return <AuthSeedMethod />
       case "signUp":
         return <AuthSignUpMethod />
+      case "success":
+        return <AuthSuccessMethod />
       default:
         return null
     }
@@ -35,9 +38,7 @@ export function Auth() {
           transition={EASING.normalSpring}
           className="flex flex-col items-center justify-center gap-6"
         >
-          <AnimatePresence initial={true}>
-            {renderMethod()}
-          </AnimatePresence>
+          <AnimatePresence initial={true}>{renderMethod()}</AnimatePresence>
         </motion.div>
       </AnimatePresence>
 

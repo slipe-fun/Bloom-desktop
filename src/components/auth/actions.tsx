@@ -31,10 +31,16 @@ export function AuthActions() {
         authActions.setAuthMethod("seed")
         break
       case "signUp":
-        console.log("Submit Sign Up")
+        authActions.setLoading(true)
+
+        new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
+          authActions.setLoading(false)
+
+          authActions.setAuthMethod("success")
+        })
         break
       case "success":
-        console.log("Navigate to chats")
+        authActions.setAuthMethod("qr")
         break
     }
   }
@@ -82,25 +88,27 @@ export function AuthActions() {
       </MotionButton>
 
       <AnimatePresence mode="popLayout" initial={false}>
-        <motion.div
-          key={isSignUp ? "signUp" : "login"}
-          layout
-          initial={{ opacity: 0, x: "50%" }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: "-50%" }}
-          transition={EASING.normalSpring}
-          className="inline-flex items-center justify-center gap-1 text-base font-medium whitespace-nowrap text-foreground/40"
-        >
-          <span>
-            {isSignUp ? "Already have an account?" : "Don't have an account?"}
-          </span>
-          <button
-            onClick={handleFooterToggle}
-            className="font-semibold text-foreground hover:underline focus:underline focus:outline-none"
+        {currentMethod !== "success" && (
+          <motion.div
+            key={isSignUp ? "signUp" : "login"}
+            layout
+            initial={{ opacity: 0, x: "50%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "-50%" }}
+            transition={EASING.normalSpring}
+            className="inline-flex items-center justify-center gap-1 text-base font-medium whitespace-nowrap text-foreground/40"
           >
-            {isSignUp ? "Log in" : "Sign Up"}
-          </button>
-        </motion.div>
+            <span>
+              {isSignUp ? "Already have an account?" : "Don't have an account?"}
+            </span>
+            <button
+              onClick={handleFooterToggle}
+              className="font-semibold text-foreground hover:underline focus:underline focus:outline-none"
+            >
+              {isSignUp ? "Log in" : "Sign Up"}
+            </button>
+          </motion.div>
+        )}
       </AnimatePresence>
     </motion.div>
   )
