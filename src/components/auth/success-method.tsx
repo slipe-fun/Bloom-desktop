@@ -4,8 +4,8 @@ import Flame from "@/assets/icons/flame.svg?react"
 import Lightbolt from "@/assets/icons/lightbolt.svg?react"
 import { EASING } from "@/constants/animations-easing"
 
-const MotionFlame = motion(Flame)
-const MotionLightbolt = motion(Lightbolt)
+const MotionFlame = motion.create(Flame)
+const MotionLightbolt = motion.create(Lightbolt)
 
 export function AuthSuccessMethod() {
   return (

@@ -10,9 +10,9 @@ interface QRCodeProps {
   data?: string
 }
 
-const MotionImage = motion(Image)
-const MotionFaceID = motion(FaceID)
-const MotionStar = motion(Star)
+const MotionImage = motion.create(Image)
+const MotionFaceID = motion.create(FaceID)
+const MotionStar = motion.create(Star)
 
 function PureQRCode({
   data = "bloom://auth?t=AQJP12NqtpWvZsdfXf5GM8kompGwOkNjYxODam",

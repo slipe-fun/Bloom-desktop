@@ -1,0 +1,1 @@
+export const RECOVERY_KEY_STORAGE = "recovery_key" as const

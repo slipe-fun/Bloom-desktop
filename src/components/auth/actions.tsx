@@ -4,8 +4,9 @@ import { EASING } from "@/constants/animations-easing"
 import { useSnapshot } from "valtio/react"
 import { authStore, authActions } from "@/store/auth.store"
 import { cn } from "@/lib/utils"
+import { handleRegister } from "@/lib/auth/handle-register"
 
-const MotionButton = motion(Button)
+const MotionButton = motion.create(Button)
 
 type AuthMethod = "seed" | "qr" | "success" | "signUp"
 
@@ -22,7 +23,7 @@ export function AuthActions() {
   const isSignUp = currentMethod === "signUp"
   const isPrimaryAction = isSignUp || currentMethod === "success"
 
-  const handleMainAction = () => {
+  const handleMainAction = async () => {
     switch (currentMethod) {
       case "seed":
         authActions.setAuthMethod("qr")
@@ -33,11 +34,10 @@ export function AuthActions() {
       case "signUp":
         authActions.setLoading(true)
 
-        new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
+        await handleRegister().then(() => {
           authActions.setLoading(false)
-
-          authActions.setAuthMethod("success")
-        })
+          authActions.setAuthMethod('success')
+    })
         break
       case "success":
         authActions.setAuthMethod("qr")
@@ -68,7 +68,7 @@ export function AuthActions() {
             ? "bg-primary text-primary-foreground"
             : "bg-secondary text-secondary-foreground"
         )}
-        onClick={handleMainAction}
+        onClick={() => handleMainAction()}
         transition={{ ...EASING.normalSpring, scale: EASING.springy }}
         whileTap={{ scale: 0.95 }}
       >
