@@ -4,14 +4,14 @@ use std::path::PathBuf;
 
 fn main() {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
-    let lib_dir = PathBuf::from(&manifest_dir).join("libs");
+    let lib_dir = PathBuf::from(&manifest_dir).join("./");
 
     println!("cargo:rustc-link-search=native={}", lib_dir.display());
     
     println!("cargo:rustc-link-lib=libbloom");
 
-    println!("cargo:rerun-if-changed=libs/libbloom.lib");
-    println!("cargo:rerun-if-changed=libs/libbloom.dll");
+    println!("cargo:rerun-if-changed=libbloom.lib");
+    println!("cargo:rerun-if-changed=libbloom.dll");
 
     if let Ok(out_dir) = env::var("OUT_DIR") {
         let out_path = PathBuf::from(out_dir);

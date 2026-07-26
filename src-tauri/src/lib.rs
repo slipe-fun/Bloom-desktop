@@ -9,11 +9,19 @@ use std::path::Path;
 use std::sync::OnceLock;
 use tauri::Manager;
 
-const SERVICE_NAME: &str = "pw.ephmrl.bloom.desktop";
+// Application identifier for the OS system keychain
+const SERVICE_NAME: &str = "pw.bloomapp.desktop";
 const KEY_NAME: &str = "db_encryption_key";
-const SALT_KEY_NAME: &str = "argon2_salt";
+const SALT_KEY_NAME: &str = "argon2_salt"; // separate keychain entry for the Argon2 salt
+// FIX: separate keychain entry for the Stronghold vault password. This must NOT
+// be the same secret as KEY_NAME (db encryption key) — see get_or_create_secret_32,
+// which is shared code but always called with independently generated/stored secrets.
+const STRONGHOLD_KEY_NAME: &str = "stronghold_vault_key";
 
+// RAM caches to avoid thread races between Rust and React. Two distinct caches
+// because the two secrets must never be derived from or equal to one another.
 static DB_KEY_CACHE: OnceLock<[u8; 32]> = OnceLock::new();
+static STRONGHOLD_KEY_CACHE: OnceLock<[u8; 32]> = OnceLock::new();
 
 #[cfg(target_os = "windows")]
 #[link(name = "legacy_stdio_definitions")]
@@ -71,6 +79,12 @@ extern "C" {
     pub fn UnregisterMessagesCallback();
 }
 
+/// Converts a C string returned by the FFI layer into a Rust String and frees it.
+///
+/// ASSUMPTION (not verified against the C/Go library source, which is not available
+/// in this context): a null pointer means "success, no data". If the library can
+/// also return null on allocation failure, this will incorrectly be treated as success.
+/// This should be confirmed against the actual library implementation.
 pub unsafe fn c_to_string_and_free(ptr: *mut c_char) -> Result<String, String> {
     if ptr.is_null() {
         return Ok("OK".to_string());
@@ -86,6 +100,17 @@ pub unsafe fn c_to_string_and_free(ptr: *mut c_char) -> Result<String, String> {
     }
 }
 
+/// Detects whether a response string represents an error.
+///
+/// LIMITATION: the exact wire format produced by the FFI library is not available
+/// in this context. This function first tries to interpret the response as JSON
+/// and look for a structural error indicator (an "error" field with a non-empty
+/// value, or an explicit "ok": false), which is far less prone to false positives
+/// than a plain substring search. If the response is not valid JSON, it falls back
+/// to the original substring check, which can still misfire on legitimate payloads
+/// that happen to contain the word "error" (e.g. a user's display name or a chat
+/// message). Replacing this fallback correctly requires knowing the library's
+/// actual response schema.
 fn is_error_response(result: &str) -> bool {
     if let Ok(value) = serde_json::from_str::<serde_json::Value>(result) {
         if let Some(ok) = value.get("ok").and_then(|v| v.as_bool()) {
@@ -102,6 +127,7 @@ fn is_error_response(result: &str) -> bool {
     result.contains("error")
 }
 
+/// Retrieves the system storage directory.
 fn get_storage_path() -> Result<String, String> {
     let proj_dirs = ProjectDirs::from("pw", "bloomapp", "Bloom")
         .ok_or_else(|| "Could not determine the system user data directory".to_string())?;
@@ -125,6 +151,11 @@ fn generate_random_bytes_16() -> [u8; 16] {
     buf
 }
 
+/// Restricts a file's permissions to owner-only read/write on Unix-like systems.
+///
+/// NOTE: this is not implemented for Windows. On Windows, equivalent protection
+/// would require setting an explicit ACL on the file, which is not done here.
+/// This is a known gap, not a fixed issue.
 #[cfg(unix)]
 fn restrict_file_permissions(path: &Path) -> Result<(), String> {
     use std::os::unix::fs::PermissionsExt;
@@ -138,6 +169,14 @@ fn restrict_file_permissions(_path: &Path) -> Result<(), String> {
     Ok(())
 }
 
+/// Gets or generates the Argon2 salt used to derive the Stronghold password key.
+///
+/// FIX: the salt is no longer a hardcoded, application-wide constant. A random
+/// 16-byte salt is generated once per installation, stored in the OS keychain
+/// (with a file-based fallback, mirroring the key storage strategy below), and
+/// reused on subsequent runs. This does not make the salt secret — salts are not
+/// required to be secret — but it does make it unique per installation, which is
+/// the actual security property a salt should provide.
 fn get_or_create_argon2_salt() -> Result<[u8; 16], String> {
     let storage_path = get_storage_path()?;
     let salt_file_path = Path::new(&storage_path).join("argon2.salt");
@@ -187,15 +226,45 @@ fn get_or_create_argon2_salt() -> Result<[u8; 16], String> {
     Ok(new_salt)
 }
 
-fn get_or_create_db_key() -> Result<[u8; 32], String> {
-    if let Some(cached_key) = DB_KEY_CACHE.get() {
-        return Ok(*cached_key);
+/// Retrieves or generates the database encryption key with layered storage
+/// (Keychain + AppData file backup + RAM cache).
+///
+/// KNOWN LIMITATION (not fully fixed): the file backup at `db.key` is written
+/// in plaintext. This is an inherent weakness of any local-file fallback: if an
+/// attacker has file-system read access, they can read the key regardless of any
+/// encryption derived from material available on the same machine, since that
+/// material would be reconstructible by the same attacker. What this revision
+/// does do is restrict the file's permissions to the owning user (Unix only —
+/// see `restrict_file_permissions`), which narrows the attack surface to
+/// privilege-escalation or same-user scenarios rather than any local read access.
+/// A real fix requires a product decision: either drop the plaintext file
+/// fallback entirely (accepting that a Keychain failure blocks the user), or
+/// bind the backup to an OS-provided secure-storage primitive rather than a
+/// plain file. Neither alternative is implemented here.
+/// Generic layered secret storage (Keychain + AppData file backup), used for
+/// any independent 32-byte secret this app needs (db encryption key, Stronghold
+/// vault password, etc). Each caller MUST pass its own distinct keychain entry
+/// name, backup file name, and RAM cache — secrets obtained through separate
+/// calls to this function are independently generated and never derived from
+/// one another. This is what fixes the "one key reused for two purposes" issue.
+///
+/// Same known limitation as before regarding the plaintext file backup: see
+/// doc comment history / prior review notes. Not re-solved here, only kept
+/// consistent across all secrets that use this helper.
+fn get_or_create_secret_32(
+    keychain_entry_name: &str,
+    backup_file_name: &str,
+    cache: &'static OnceLock<[u8; 32]>,
+    log_label: &str,
+) -> Result<[u8; 32], String> {
+    if let Some(cached) = cache.get() {
+        return Ok(*cached);
     }
 
     let storage_path = get_storage_path()?;
-    let key_file_path = Path::new(&storage_path).join("db.key");
+    let key_file_path = Path::new(&storage_path).join(backup_file_name);
 
-    let keyring_result = Entry::new(SERVICE_NAME, KEY_NAME)
+    let keyring_result = Entry::new(SERVICE_NAME, keychain_entry_name)
         .map_err(|e| e.to_string())
         .and_then(|entry| entry.get_password().map_err(|e| e.to_string()));
 
@@ -209,37 +278,37 @@ fn get_or_create_db_key() -> Result<[u8; 32], String> {
                     let _ = restrict_file_permissions(&key_file_path);
                     k
                 } else {
-                    return Err("Key length stored in keychain is corrupted".into());
+                    return Err(format!("{}: key length stored in keychain is corrupted", log_label));
                 }
             } else {
-                return Err("Error decoding hex key from keychain".into());
+                return Err(format!("{}: error decoding hex key from keychain", log_label));
             }
         }
         Err(_) => {
             if key_file_path.exists() {
                 let file_bytes = fs::read(&key_file_path)
-                    .map_err(|e| format!("Could not read local db.key: {}", e))?;
+                    .map_err(|e| format!("{}: could not read local backup file: {}", log_label, e))?;
 
                 if file_bytes.len() == 32 {
                     let mut k = [0u8; 32];
                     k.copy_from_slice(&file_bytes);
 
-                    if let Ok(entry) = Entry::new(SERVICE_NAME, KEY_NAME) {
+                    if let Ok(entry) = Entry::new(SERVICE_NAME, keychain_entry_name) {
                         let _ = entry.set_password(&hex::encode(k));
                     }
                     k
                 } else {
-                    return Err("Backup key file db.key is corrupted".into());
+                    return Err(format!("{}: backup key file is corrupted", log_label));
                 }
             } else {
-                println!("[Rust] First run: generating a new master key...");
+                println!("[Rust] First run: generating a new secret ({})...", log_label);
                 let new_key = generate_random_bytes_32();
 
                 fs::write(&key_file_path, &new_key)
-                    .map_err(|e| format!("Could not save db.key: {}", e))?;
+                    .map_err(|e| format!("{}: could not save backup file: {}", log_label, e))?;
                 restrict_file_permissions(&key_file_path)?;
 
-                if let Ok(entry) = Entry::new(SERVICE_NAME, KEY_NAME) {
+                if let Ok(entry) = Entry::new(SERVICE_NAME, keychain_entry_name) {
                     let _ = entry.set_password(&hex::encode(new_key));
                 }
 
@@ -248,9 +317,27 @@ fn get_or_create_db_key() -> Result<[u8; 32], String> {
         }
     };
 
-    let _ = DB_KEY_CACHE.set(key_bytes);
+    let _ = cache.set(key_bytes);
 
     Ok(key_bytes)
+}
+
+/// The database encryption key, passed to the Go/C client via InitClient.
+fn get_or_create_db_key() -> Result<[u8; 32], String> {
+    get_or_create_secret_32(KEY_NAME, "db.key", &DB_KEY_CACHE, "db key")
+}
+
+/// FIX: an independent secret used ONLY as the Stronghold vault password.
+/// This is intentionally NOT derived from or equal to the db encryption key —
+/// the two protect different data and must not share key material, so that a
+/// compromise of one does not automatically compromise the other.
+fn get_or_create_stronghold_key() -> Result<[u8; 32], String> {
+    get_or_create_secret_32(
+        STRONGHOLD_KEY_NAME,
+        "stronghold.key",
+        &STRONGHOLD_KEY_CACHE,
+        "stronghold key",
+    )
 }
 
 pub fn internal_init_bloom() -> Result<String, String> {
@@ -285,6 +372,24 @@ pub fn internal_init_bloom() -> Result<String, String> {
 #[tauri::command]
 fn get_app_key() -> Result<String, String> {
     let key_bytes = get_or_create_db_key()?;
+    Ok(hex::encode(key_bytes))
+}
+
+/// FIX: dedicated command for the Stronghold vault password. Kept as a
+/// separate command (rather than reusing get_app_key) so the two secrets
+/// can never accidentally collapse into "the same call" again.
+///
+/// CAVEAT (not fully solved): this still crosses IPC into the webview as a
+/// plain string, same as get_app_key. The ideal fix — performing all
+/// Stronghold read/write operations as Tauri commands entirely in Rust, so
+/// this secret never enters JS memory at all — is not implemented here,
+/// because it depends on the exact Rust-side API surface of
+/// tauri-plugin-stronghold (accessing an already-initialized Stronghold
+/// instance from custom commands), which has not been verified against the
+/// project's actual plugin version in this session.
+#[tauri::command]
+fn get_stronghold_key() -> Result<String, String> {
+    let key_bytes = get_or_create_stronghold_key()?;
     Ok(hex::encode(key_bytes))
 }
 
@@ -443,6 +548,7 @@ pub fn run() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             get_app_key,
+            get_stronghold_key,
             init_bloom,
             register_user,
             login_user,
@@ -462,6 +568,8 @@ pub fn run() {
             tauri_plugin_stronghold::Builder::new(move |password| {
                 let mut output_key = [0u8; 32];
 
+                // FIX: salt is now generated per-installation and persisted,
+                // instead of being derived from the constant SERVICE_NAME string.
                 let salt = get_or_create_argon2_salt()
                     .expect("Failed to obtain Argon2 salt");
 

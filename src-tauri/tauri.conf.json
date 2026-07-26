@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "identifier": "pw.ephmrl.bloom.desktop",
   "build": {
-    "frontendDist": "../build",
+    "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
     "beforeDevCommand": "pnpm dev",
     "beforeBuildCommand": "pnpm build"
@@ -37,7 +37,7 @@
       "icons/icon.ico"
     ],
     "resources": [
-      "libs/libbloom.dll"
+      "libbloom.dll"
     ]
   }
 }
