@@ -1,0 +1,15 @@
+{
+  "app": {
+    "windows": [
+      {
+        "title": "Bloom",
+        "width": 1200,
+        "height": 800,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": false,
+        "visible": false
+      }
+    ]
+  }
+}

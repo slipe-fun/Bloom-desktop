@@ -168,13 +168,6 @@ fn restrict_file_permissions(_path: &Path) -> Result<(), String> {
 }
 
 /// Gets or generates the Argon2 salt used to derive the Stronghold password key.
-///
-/// FIX: the salt is no longer a hardcoded, application-wide constant. A random
-/// 16-byte salt is generated once per installation, stored in the OS keychain
-/// (with a file-based fallback, mirroring the key storage strategy below), and
-/// reused on subsequent runs. This does not make the salt secret — salts are not
-/// required to be secret — but it does make it unique per installation, which is
-/// the actual security property a salt should provide.
 fn get_or_create_argon2_salt() -> Result<[u8; 16], String> {
     let storage_path = get_storage_path()?;
     let salt_file_path = Path::new(&storage_path).join("argon2.salt");
@@ -325,10 +318,6 @@ fn get_or_create_db_key() -> Result<[u8; 32], String> {
     get_or_create_secret_32(KEY_NAME, "db.key", &DB_KEY_CACHE, "db key")
 }
 
-/// FIX: an independent secret used ONLY as the Stronghold vault password.
-/// This is intentionally NOT derived from or equal to the db encryption key —
-/// the two protect different data and must not share key material, so that a
-/// compromise of one does not automatically compromise the other.
 fn get_or_create_stronghold_key() -> Result<[u8; 32], String> {
     get_or_create_secret_32(
         STRONGHOLD_KEY_NAME,
@@ -373,10 +362,6 @@ fn get_app_key() -> Result<String, String> {
     Ok(hex::encode(key_bytes))
 }
 
-/// FIX: dedicated command for the Stronghold vault password. Kept as a
-/// separate command (rather than reusing get_app_key) so the two secrets
-/// can never accidentally collapse into "the same call" again.
-///
 /// CAVEAT (not fully solved): this still crosses IPC into the webview as a
 /// plain string, same as get_app_key. The ideal fix — performing all
 /// Stronghold read/write operations as Tauri commands entirely in Rust, so
@@ -593,8 +578,6 @@ pub fn run() {
             tauri_plugin_stronghold::Builder::new(move |password| {
                 let mut output_key = [0u8; 32];
 
-                // FIX: salt is now generated per-installation and persisted,
-                // instead of being derived from the constant SERVICE_NAME string.
                 let salt = get_or_create_argon2_salt()
                     .expect("Failed to obtain Argon2 salt");
 
