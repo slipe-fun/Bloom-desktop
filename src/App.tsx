@@ -1,9 +1,10 @@
 import { Titlebar } from "@/components/titlebar"
 import { Auth } from "@/views/auth"
+import { Home } from "@/views/home"
 import { getCurrentWindow } from "@tauri-apps/api/window"
 import { useEffect } from "react"
 import { useSnapshot } from "valtio"
-import { authActions, authStore } from "@/store/auth.store"
+import { authStore } from "@/store/auth.store"
 import { invoke } from "@tauri-apps/api/core"
 
 export function App() {
@@ -25,7 +26,8 @@ export function App() {
   return (
     <div className="flex min-h-svh flex-col">
       <Titlebar />
-      <Auth />
+      {/* <Auth /> */}
+      <Home />
     </div>
   )
 }
