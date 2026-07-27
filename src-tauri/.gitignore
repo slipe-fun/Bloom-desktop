@@ -2,4 +2,7 @@
 # will have compiled files and executables
 /target/
 /gen/schemas
-storage/
+libbloom.dll
+libbloom.lib
+libbloom.h
+app_data.vault

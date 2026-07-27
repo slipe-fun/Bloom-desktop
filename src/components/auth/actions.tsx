@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { EASING } from "@/constants/animations-easing"
 import { useSnapshot } from "valtio/react"
 import { authStore, authActions } from "@/store/auth.store"
-import { cn } from "@/lib/utils"
 import { handleRegister } from "@/lib/auth/handle-register"
 
 const MotionButton = motion.create(Button)
@@ -13,7 +12,7 @@ type AuthMethod = "seed" | "qr" | "success" | "signUp"
 const BUTTON_LABELS: Record<AuthMethod, string> = {
   seed: "Log in via QR Code",
   qr: "Log in via Seed phrase",
-  success: "Continue to chats",
+  success: "Continue",
   signUp: "Sign Up",
 }
 
@@ -36,11 +35,11 @@ export function AuthActions() {
 
         await handleRegister().then(() => {
           authActions.setLoading(false)
-          authActions.setAuthMethod('success')
-    })
+          authActions.setAuthMethod("success")
+        })
         break
       case "success":
-        authActions.setAuthMethod("qr")
+        authActions.setSeedPhraseDialog(true)
         break
     }
   }
@@ -62,12 +61,7 @@ export function AuthActions() {
       <MotionButton
         layout
         variant={isPrimaryAction ? "default" : "secondary"}
-        className={cn(
-          "h-12 overflow-hidden rounded-full px-6 text-base font-semibold will-change-transform",
-          isPrimaryAction
-            ? "bg-primary text-primary-foreground"
-            : "bg-secondary text-secondary-foreground"
-        )}
+        className="h-12 overflow-hidden rounded-full px-6 text-base font-semibold will-change-transform"
         onClick={() => handleMainAction()}
         transition={{ ...EASING.normalSpring, scale: EASING.springy }}
         whileTap={{ scale: 0.95 }}

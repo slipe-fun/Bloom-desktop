@@ -8,14 +8,12 @@ use std::os::raw::{c_char, c_int, c_uchar};
 use std::path::Path;
 use std::sync::OnceLock;
 use tauri::Manager;
+use bip39::{Mnemonic, Language};
 
 // Application identifier for the OS system keychain
 const SERVICE_NAME: &str = "pw.bloomapp.desktop";
 const KEY_NAME: &str = "db_encryption_key";
 const SALT_KEY_NAME: &str = "argon2_salt"; // separate keychain entry for the Argon2 salt
-// FIX: separate keychain entry for the Stronghold vault password. This must NOT
-// be the same secret as KEY_NAME (db encryption key) — see get_or_create_secret_32,
-// which is shared code but always called with independently generated/stored secrets.
 const STRONGHOLD_KEY_NAME: &str = "stronghold_vault_key";
 
 // RAM caches to avoid thread races between Rust and React. Two distinct caches
@@ -539,6 +537,31 @@ fn create_chat(
     }
 }
 
+#[tauri::command]
+fn gen_mnemonic(key: Vec<u8>) -> Result<String, String> {
+    if key.len() != 16 {
+        return Err("Key must be 16 byte length".to_string());
+    }
+
+    let mnemonic = Mnemonic::from_entropy_in(Language::English, &key)
+        .map_err(|e| e.to_string())?;
+
+    Ok(mnemonic.to_string())
+}
+
+#[tauri::command]
+fn restore_mnemonic(phrase: String) -> Result<Vec<u8>, String> {
+    let mnemonic = Mnemonic::parse(phrase.trim()).map_err(|e| e.to_string())?;
+
+    let entropy = mnemonic.to_entropy();
+
+    if entropy.len() != 16 {
+        return Err("Phrase doesn't contains 16 bytes of entropy".to_string());
+    }
+
+    Ok(entropy.to_vec())
+}
+
 // =========================================================================
 // Tauri application initialization
 // =========================================================================
@@ -562,7 +585,9 @@ pub fn run() {
             get_local_chats,
             send_message,
             load_messages,
-            create_chat
+            create_chat,
+            gen_mnemonic,
+            restore_mnemonic
         ])
         .plugin(
             tauri_plugin_stronghold::Builder::new(move |password| {

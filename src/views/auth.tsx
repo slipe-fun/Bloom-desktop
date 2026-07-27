@@ -7,6 +7,7 @@ import { EASING } from "@/constants/animations-easing"
 import { authStore } from "@/store/auth.store"
 import { AnimatePresence, motion } from "framer-motion"
 import { useSnapshot } from "valtio/react"
+import { AuthSeedDialog } from "@/components/auth/seed-dialog"
 
 export function Auth() {
   const { method } = useSnapshot(authStore)
@@ -43,6 +44,8 @@ export function Auth() {
       </AnimatePresence>
 
       <AuthActions />
+
+      <AuthSeedDialog/>
     </section>
   )
 }

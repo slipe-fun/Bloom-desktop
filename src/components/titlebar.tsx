@@ -7,6 +7,8 @@ import { motion } from "framer-motion"
 import { getCurrentWindow } from "@tauri-apps/api/window"
 import { type } from "@tauri-apps/plugin-os"
 
+export const TITLEBAR_HEIGHT = 42
+
 export function Titlebar() {
   const [isMac, setIsMac] = useState(false)
 
