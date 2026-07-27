@@ -1,3 +1,5 @@
+#![allow(non_snake_case)]
+
 mod commands;
 mod ffi;
 mod security;
@@ -9,24 +11,24 @@ use tauri::Manager;
 pub fn run() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-            commands::crypto::get_app_key,
-            commands::crypto::get_stronghold_key,
-            commands::init_bloom,
-            commands::auth::register_user,
-            commands::auth::login_user,
-            commands::auth::restore_session,
-            commands::auth::clear_credentials,
-            commands::user::get_me,
-            commands::user::search_users,
-            commands::user::get_user,
-            commands::user::edit_user,
-            commands::chat::get_chats,
-            commands::chat::get_local_chats,
-            commands::chat::send_message,
-            commands::chat::load_messages,
-            commands::chat::create_chat,
-            commands::crypto::gen_mnemonic,
-            commands::crypto::restore_mnemonic
+            commands::crypto::getAppKey,
+            commands::crypto::getStrongholdKey,
+            commands::initBloom,
+            commands::auth::registerUser,
+            commands::auth::loginUser,
+            commands::auth::restoreSession,
+            commands::auth::clearCredentials,
+            commands::user::getMe,
+            commands::user::searchUsers,
+            commands::user::getUser,
+            commands::user::editUser,
+            commands::chat::getChats,
+            commands::chat::getLocalChats,
+            commands::chat::sendMessage,
+            commands::chat::loadMessages,
+            commands::chat::createChat,
+            commands::crypto::genMnemonic,
+            commands::crypto::restoreMnemonic
         ])
         .plugin(
             tauri_plugin_stronghold::Builder::new(move |password| {
@@ -43,7 +45,7 @@ pub fn run() {
             }).build()
         )
         .setup(|app| {
-            match commands::internal_init_bloom() {
+            match commands::internalInitBloom() {
                 Ok(status) => println!("[Rust] Bloom Client initialized: {}", status),
                 Err(err) => eprintln!("[Rust] Bloom Client init error: {}", err),
             }

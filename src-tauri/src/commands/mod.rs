@@ -1,3 +1,5 @@
+#![allow(non_snake_case)]
+
 pub mod auth;
 pub mod chat;
 pub mod crypto;
@@ -6,7 +8,7 @@ pub mod user;
 use crate::{ffi, security};
 use std::ffi::{CString, c_int};
 
-pub fn internal_init_bloom() -> Result<String, String> {
+pub fn internalInitBloom() -> Result<String, String> {
     let base_url = "https://api.bloomapp.pw/";
     let ws_url = "wss://api.bloomapp.pw/ws";
 
@@ -32,6 +34,6 @@ pub fn internal_init_bloom() -> Result<String, String> {
 }
 
 #[tauri::command]
-pub fn init_bloom() -> Result<String, String> {
-    internal_init_bloom()
+pub fn initBloom() -> Result<String, String> {
+    internalInitBloom()
 }

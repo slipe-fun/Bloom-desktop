@@ -4,19 +4,19 @@ use crate::security;
 use bip39::{Language, Mnemonic};
 
 #[tauri::command]
-pub fn get_app_key() -> Result<String, String> {
+pub fn getAppKey() -> Result<String, String> {
     let key_bytes = security::get_or_create_db_key()?;
     Ok(hex::encode(key_bytes))
 }
 
 #[tauri::command]
-pub fn get_stronghold_key() -> Result<String, String> {
+pub fn getStrongholdKey() -> Result<String, String> {
     let key_bytes = security::get_or_create_stronghold_key()?;
     Ok(hex::encode(key_bytes))
 }
 
 #[tauri::command]
-pub fn gen_mnemonic(key: Vec<u8>) -> Result<String, String> {
+pub fn genMnemonic(key: Vec<u8>) -> Result<String, String> {
     if key.len() != 16 {
         return Err("Key must be 16 byte length".to_string());
     }
@@ -28,7 +28,7 @@ pub fn gen_mnemonic(key: Vec<u8>) -> Result<String, String> {
 }
 
 #[tauri::command]
-pub fn restore_mnemonic(phrase: String) -> Result<Vec<u8>, String> {
+pub fn restoreMnemonic(phrase: String) -> Result<Vec<u8>, String> {
     let mnemonic = Mnemonic::parse(phrase.trim()).map_err(|e| e.to_string())?;
 
     let entropy = mnemonic.to_entropy();

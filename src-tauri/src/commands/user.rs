@@ -4,7 +4,7 @@ use crate::ffi;
 use std::ffi::CString;
 
 #[tauri::command]
-pub fn get_me() -> Result<String, String> {
+pub fn getMe() -> Result<String, String> {
     unsafe {
         let ptr = ffi::GetMe();
         ffi::c_to_string_and_free(ptr)
@@ -12,7 +12,7 @@ pub fn get_me() -> Result<String, String> {
 }
 
 #[tauri::command]
-pub fn search_users(query: String) -> Result<String, String> {
+pub fn searchUsers(query: String) -> Result<String, String> {
     let c_query = CString::new(query).map_err(|e| e.to_string())?;
     unsafe {
         let ptr = ffi::SearchUsers(c_query.as_ptr());
@@ -21,7 +21,7 @@ pub fn search_users(query: String) -> Result<String, String> {
 }
 
 #[tauri::command]
-pub fn get_user(userId: String) -> Result<String, String> {
+pub fn getUser(userId: String) -> Result<String, String> {
     let c_id = CString::new(userId).map_err(|e| e.to_string())?;
     unsafe {
         let ptr = ffi::GetUser(c_id.as_ptr());
@@ -30,7 +30,7 @@ pub fn get_user(userId: String) -> Result<String, String> {
 }
 
 #[tauri::command]
-pub fn edit_user(
+pub fn editUser(
     username: Option<String>,
     displayName: Option<String>,
     description: Option<String>,

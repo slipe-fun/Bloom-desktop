@@ -28,7 +28,7 @@ async function getStorageInstance(): Promise<StorageInstance> {
   }
 
   const attempt = (async (): Promise<StorageInstance> => {
-    const strongholdKey = await invoke<string>('get_stronghold_key');
+    const strongholdKey = await invoke<string>('getStrongholdKey');
 
     const stronghold = await Stronghold.load(VAULT_FILE, strongholdKey);
 

@@ -4,7 +4,7 @@ use crate::ffi;
 use std::ffi::CString;
 
 #[tauri::command]
-pub fn register_user() -> Result<String, String> {
+pub fn registerUser() -> Result<String, String> {
     unsafe {
         let ptr = ffi::Register();
         ffi::c_to_string_and_free(ptr)
@@ -12,7 +12,7 @@ pub fn register_user() -> Result<String, String> {
 }
 
 #[tauri::command]
-pub fn login_user(recoveryKey: String) -> Result<String, String> {
+pub fn loginUser(recoveryKey: String) -> Result<String, String> {
     let c_key = CString::new(recoveryKey).map_err(|e| e.to_string())?;
     unsafe {
         let ptr = ffi::Login(c_key.as_ptr());
@@ -21,7 +21,7 @@ pub fn login_user(recoveryKey: String) -> Result<String, String> {
 }
 
 #[tauri::command]
-pub fn restore_session() -> Result<String, String> {
+pub fn restoreSession() -> Result<String, String> {
     unsafe {
         let ptr = ffi::RestoreSession();
         ffi::c_to_string_and_free(ptr)
@@ -29,7 +29,7 @@ pub fn restore_session() -> Result<String, String> {
 }
 
 #[tauri::command]
-pub fn clear_credentials() {
+pub fn clearCredentials() {
     unsafe {
         ffi::ClearCredentials();
     }

@@ -4,7 +4,7 @@ use crate::ffi;
 use std::ffi::{CString, c_int};
 
 #[tauri::command]
-pub fn get_chats() -> Result<String, String> {
+pub fn getChats() -> Result<String, String> {
     unsafe {
         let ptr = ffi::GetChats();
         ffi::c_to_string_and_free(ptr)
@@ -12,7 +12,7 @@ pub fn get_chats() -> Result<String, String> {
 }
 
 #[tauri::command]
-pub fn get_local_chats() -> Result<String, String> {
+pub fn getLocalChats() -> Result<String, String> {
     unsafe {
         let ptr = ffi::GetLocalChats();
         ffi::c_to_string_and_free(ptr)
@@ -20,7 +20,7 @@ pub fn get_local_chats() -> Result<String, String> {
 }
 
 #[tauri::command]
-pub fn send_message(chatId: i32, replyToId: i32, content: String) -> Result<String, String> {
+pub fn sendMessage(chatId: i32, replyToId: i32, content: String) -> Result<String, String> {
     let c_content = CString::new(content).map_err(|e| e.to_string())?;
     unsafe {
         let ptr = ffi::SendMessage(chatId as c_int, replyToId as c_int, c_content.as_ptr());
@@ -29,7 +29,7 @@ pub fn send_message(chatId: i32, replyToId: i32, content: String) -> Result<Stri
 }
 
 #[tauri::command]
-pub fn load_messages(chatId: i32, beforeId: i32) -> Result<String, String> {
+pub fn loadMessages(chatId: i32, beforeId: i32) -> Result<String, String> {
     unsafe {
         let ptr = ffi::LoadMessages(chatId as c_int, beforeId as c_int);
         ffi::c_to_string_and_free(ptr)
@@ -37,7 +37,7 @@ pub fn load_messages(chatId: i32, beforeId: i32) -> Result<String, String> {
 }
 
 #[tauri::command]
-pub fn create_chat(
+pub fn createChat(
     userId: String,
     mlKem768Key: String,
     x448Key: String,

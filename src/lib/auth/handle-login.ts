@@ -6,7 +6,7 @@ import { bytesToHex } from "../utils"
 export const handleLogin = async (phrase: readonly string[]) => {
   try {
     const bytes = await invoke<Uint8Array<ArrayBufferLike>>(
-      "restore_mnemonic",
+      "restoreMnemonic",
       {
         phrase: phrase.join(" "),
       }
@@ -14,7 +14,7 @@ export const handleLogin = async (phrase: readonly string[]) => {
 
     const key = bytesToHex(bytes)
 
-    await invoke("login_user", {
+    await invoke("loginUser", {
       recoveryKey: key
     })
 
