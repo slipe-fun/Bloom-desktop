@@ -24,7 +24,8 @@ export function AuthSeedMethod() {
       <div className="relative">
         <SeedPhraseInput />
          <motion.div
-          className="absolute flex top-0 w-full h-full items-center justify-center"
+          data-disabled={!loading}
+          className="absolute flex top-0 w-full data-disabled:pointer-events-none h-full items-center justify-center"
           transition={EASING.normalSpring}
           animate={{
             opacity: loading ? 1 : 0,
