@@ -8,17 +8,18 @@ import {
   ModalDescription,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { SeedPhraseInput } from "./seed-phrase-input"
 
 const MotionButton = motion.create(Button)
 
 export function AuthSeedDialog() {
-  const { seedPhraseDialog } = useSnapshot(authStore)
+  const { isPhraseDialog } = useSnapshot(authStore)
 
   return (
     <CustomModal
       className="w-108.5"
-      open={seedPhraseDialog}
-      onOpenChange={authActions.setSeedPhraseDialog}
+      open={isPhraseDialog}
+      onOpenChange={authActions.setIsPhraseDialog}
     >
       <div className="flex w-full flex-col items-center justify-center gap-2 p-4 pb-3">
         <ModalTitle className="text-2xl font-semibold text-popover-foreground">
@@ -28,6 +29,10 @@ export function AuthSeedDialog() {
           Save it and keep in mind, it will be used for login if you lost all
           your devices
         </ModalDescription>
+      </div>
+
+      <div className="w-full p-4">
+        <SeedPhraseInput readOnly/>
       </div>
 
       <div className="flex w-full gap-3 p-4 pt-3">

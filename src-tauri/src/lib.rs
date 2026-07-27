@@ -40,7 +40,7 @@ extern "C" {
 
     pub fn FreeString(p: *mut c_char);
     pub fn Register() -> *mut c_char;
-    pub fn Login(recovery_key: *const c_char) -> *mut c_char;
+    pub fn Login(raw_recovery_key: *const c_char) -> *mut c_char;
     pub fn RestoreSession() -> *mut c_char;
     pub fn ClearCredentials();
     pub fn GetMe() -> *mut c_char;

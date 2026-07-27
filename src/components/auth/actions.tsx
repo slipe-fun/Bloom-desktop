@@ -39,7 +39,7 @@ export function AuthActions() {
         })
         break
       case "success":
-        authActions.setSeedPhraseDialog(true)
+        authActions.setIsPhraseDialog(true)
         break
     }
   }

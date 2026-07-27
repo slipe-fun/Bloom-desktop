@@ -6,14 +6,14 @@ interface AuthStore {
   seedPhrase: string[]
   method: AuthMethod
   loading: boolean
-  seedPhraseDialog: boolean
+  isPhraseDialog: boolean
 }
 
 export const authStore = proxy<AuthStore>({
   seedPhrase: Array(12).fill(""),
   method: "qr",
   loading: false,
-  seedPhraseDialog: false,
+  isPhraseDialog: false,
 })
 
 export const authActions = {
@@ -26,7 +26,7 @@ export const authActions = {
   setLoading: (loading: boolean) => {
     authStore.loading = loading
   },
-  setSeedPhraseDialog: (seedPhraseDialog: boolean) => {
-    authStore.seedPhraseDialog = seedPhraseDialog
+  setIsPhraseDialog: (isPhraseDialog: boolean) => {
+    authStore.isPhraseDialog = isPhraseDialog
   }
 }
