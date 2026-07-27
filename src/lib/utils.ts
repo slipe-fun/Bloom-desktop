@@ -13,6 +13,10 @@ export function hexToBytes(hex: string): Uint8Array {
   return Uint8Array.from(hex.match(/../g)!.map((byte) => parseInt(byte, 16)))
 }
 
+export function bytesToHex(bytes: Uint8Array | number[]): string {
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
 export function base64ToJson<T = unknown>(base64: string): T {
   const obj = JSON.parse(
     new TextDecoder().decode(

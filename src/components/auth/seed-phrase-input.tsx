@@ -1,7 +1,9 @@
 import { useState } from "react"
 import { cn } from "@/lib/utils"
-import { authStore, authActions } from "@/store/auth.store"
+import { authStore, authActions, SEED_PHRASE_LENGTH } from "@/store/auth.store"
 import { useSnapshot } from "valtio/react"
+import { motion } from "framer-motion"
+import { EASING } from "@/constants/animations-easing"
 
 interface SeedPhraseInputProps {
   onChange?: (words: string[]) => void
@@ -16,19 +18,28 @@ interface SeedWordFieldProps {
   readOnly?: boolean
 }
 
-export function SeedPhraseInput({ onChange, readOnly = false }: SeedPhraseInputProps) {
-  const { seedPhrase } = useSnapshot(authStore)
+export function SeedPhraseInput({
+  onChange,
+  readOnly = false,
+}: SeedPhraseInputProps) {
+  const { seedPhrase, loading } = useSnapshot(authStore)
 
   const handleWordChange = (index: number, val: string) => {
     if (readOnly) return
     const cleanValue = val.replace(/\s/g, "").toLowerCase()
-    const updatedWords = [...seedPhrase]
-    updatedWords[index] = cleanValue
-    authActions.setSeedPhrase(updatedWords)
-    onChange?.(updatedWords)
+    authActions.setSeedWord(index, cleanValue)
+
+    if (onChange) {
+      const updatedWords = [...seedPhrase]
+      updatedWords[index] = cleanValue
+      onChange(updatedWords)
+    }
   }
 
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>, startIndex: number) => {
+  const handlePaste = (
+    e: React.ClipboardEvent<HTMLInputElement>,
+    startIndex: number
+  ) => {
     if (readOnly) return
     e.preventDefault()
     const pastedText = e.clipboardData.getData("text")
@@ -37,7 +48,7 @@ export function SeedPhraseInput({ onChange, readOnly = false }: SeedPhraseInputP
     if (parsedWords.length > 1) {
       const updatedWords = [...seedPhrase]
       for (let i = 0; i < parsedWords.length; i++) {
-        if (startIndex + i < 12) {
+        if (startIndex + i < SEED_PHRASE_LENGTH) {
           updatedWords[startIndex + i] = parsedWords[i].toLowerCase()
         }
       }
@@ -49,37 +60,49 @@ export function SeedPhraseInput({ onChange, readOnly = false }: SeedPhraseInputP
   }
 
   return (
-    <div className="w-full max-w-100">
-      <div className="grid grid-cols-2 gap-3">
-        {seedPhrase.map((word, index) => (
-          <SeedWordField
-            key={index}
-            index={index}
-            value={word}
-            onChange={(val) => handleWordChange(index, val)}
-            onPaste={(e) => handlePaste(e, index)}
-            readOnly={readOnly}
-          />
-        ))}
-      </div>
-    </div>
+    <motion.div
+      className="grid w-full max-w-100 grid-cols-2 gap-3"
+      transition={EASING.normalSpring}
+      animate={{
+        filter: loading ? "blur(8px)" : "blur(0px)",
+        opacity: loading ? 0.5 : 1,
+      }}
+    >
+      {Array.from({ length: SEED_PHRASE_LENGTH }).map((_, index) => (
+        <SeedWordField
+          key={index}
+          index={index}
+          value={seedPhrase[index]}
+          onChange={(val) => handleWordChange(index, val)}
+          onPaste={(e) => handlePaste(e, index)}
+          readOnly={readOnly}
+        />
+      ))}
+    </motion.div>
   )
 }
 
-function SeedWordField({ index, value, onChange, onPaste, readOnly }: SeedWordFieldProps) {
+function SeedWordField({
+  index,
+  value,
+  onChange,
+  onPaste,
+  readOnly,
+}: SeedWordFieldProps) {
   const [isFocused, setIsFocused] = useState(false)
-  const isHighlighted = isFocused || value.length > 0
+  const isHighlighted = isFocused || value?.length > 0
 
   return (
     <div
       className={cn(
-        "relative flex h-12 overflow-hidden w-full items-center rounded-lg bg-secondary px-4 transition-all duration-200 border border-transparent",
-        !readOnly && "focus-within:ring-2 focus-within:ring-primary/50 focus-within:border-transparent"
+        "relative flex h-12 w-full items-center overflow-hidden rounded-lg border border-transparent bg-secondary px-4 transition-all duration-200",
+        !readOnly &&
+          "focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary/50"
       )}
     >
       <input
         type="text"
-        value={value}
+        value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
         onPaste={onPaste}
         onFocus={() => !readOnly && setIsFocused(true)}
@@ -91,17 +114,15 @@ function SeedWordField({ index, value, onChange, onPaste, readOnly }: SeedWordFi
         autoCapitalize="none"
         spellCheck={false}
         className={cn(
-          "w-full h-full bg-transparent font-semibold text-foreground placeholder:text-muted-foreground/30 focus:outline-none pr-12 text-base",
+          "h-full w-full bg-transparent pr-12 text-base font-semibold text-foreground placeholder:text-muted-foreground/30 focus:outline-none",
           readOnly ? "cursor-default select-none" : "cursor-text"
         )}
       />
-      
+
       <span
         className={cn(
-          "absolute right-1.25 -bottom-1.5 text-3xl font-bold italic select-none pointer-events-none leading-none transition-colors",
-          isHighlighted && !readOnly
-            ? "text-foreground" 
-            : "text-foreground/40"
+          "pointer-events-none absolute right-1.25 -bottom-1.5 text-3xl leading-none font-bold italic transition-colors select-none",
+          isHighlighted && !readOnly ? "text-foreground" : "text-foreground/40"
         )}
       >
         {index + 1}

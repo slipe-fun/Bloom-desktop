@@ -2,12 +2,16 @@ import { Button } from "@/components/ui/button"
 import { motion, AnimatePresence } from "framer-motion"
 import { EASING } from "@/constants/animations-easing"
 import { useSnapshot } from "valtio/react"
-import { authStore, authActions } from "@/store/auth.store"
+import {
+  authStore,
+  authActions,
+  isSeedPhraseComplete,
+  type AuthMethod,
+} from "@/store/auth.store"
 import { handleRegister } from "@/lib/auth/handle-register"
+import { handleLogin } from "@/lib/auth/handle-login"
 
 const MotionButton = motion.create(Button)
-
-type AuthMethod = "seed" | "qr" | "success" | "signUp"
 
 const BUTTON_LABELS: Record<AuthMethod, string> = {
   seed: "Log in via QR Code",
@@ -17,30 +21,41 @@ const BUTTON_LABELS: Record<AuthMethod, string> = {
 }
 
 export function AuthActions() {
-  const { method: currentMethod } = useSnapshot(authStore)
+  const { method: currentMethod, seedPhrase } = useSnapshot(authStore)
 
   const isSignUp = currentMethod === "signUp"
-  const isPrimaryAction = isSignUp || currentMethod === "success"
+  const seedPhraseComplete = isSeedPhraseComplete(seedPhrase)
+  const isPrimaryAction =
+    isSignUp || currentMethod === "success" || seedPhraseComplete
 
   const handleMainAction = async () => {
-    switch (currentMethod) {
-      case "seed":
-        authActions.setAuthMethod("qr")
-        break
-      case "qr":
-        authActions.setAuthMethod("seed")
-        break
-      case "signUp":
-        authActions.setLoading(true)
+    if (seedPhraseComplete) {
+      authActions.setLoading(true)
 
-        await handleRegister().then(() => {
-          authActions.setLoading(false)
-          authActions.setAuthMethod("success")
-        })
-        break
-      case "success":
-        authActions.setIsPhraseDialog(true)
-        break
+      await handleLogin(seedPhrase).then(() => {
+        authActions.setLoading(false)
+        authActions.setAuthMethod("success")
+      })
+    } else {
+      switch (currentMethod) {
+        case "seed":
+          authActions.setAuthMethod("qr")
+          break
+        case "qr":
+          authActions.setAuthMethod("seed")
+          break
+        case "signUp":
+          authActions.setLoading(true)
+
+          await handleRegister().then(() => {
+            authActions.setLoading(false)
+            authActions.setAuthMethod("success")
+          })
+          break
+        case "success":
+          authActions.setIsPhraseDialog(true)
+          break
+      }
     }
   }
 
@@ -68,7 +83,7 @@ export function AuthActions() {
       >
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
-            key={currentMethod}
+            key={seedPhraseComplete ? "seedAuth" : currentMethod}
             layout
             initial={{ opacity: 0, x: "40%" }}
             animate={{ opacity: 1, x: 0 }}
@@ -76,7 +91,7 @@ export function AuthActions() {
             transition={EASING.normalSpring}
             className="inline-block whitespace-nowrap"
           >
-            {BUTTON_LABELS[currentMethod] || ""}
+            {seedPhraseComplete ? "Continue" : BUTTON_LABELS[currentMethod]}
           </motion.span>
         </AnimatePresence>
       </MotionButton>

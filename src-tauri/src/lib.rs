@@ -40,7 +40,7 @@ extern "C" {
 
     pub fn FreeString(p: *mut c_char);
     pub fn Register() -> *mut c_char;
-    pub fn Login(raw_recovery_key: *const c_char) -> *mut c_char;
+    pub fn Login(recoveryKey: *const c_char) -> *mut c_char;
     pub fn RestoreSession() -> *mut c_char;
     pub fn ClearCredentials();
     pub fn GetMe() -> *mut c_char;
@@ -390,8 +390,8 @@ fn register_user() -> Result<String, String> {
 }
 
 #[tauri::command]
-fn login_user(recovery_key: String) -> Result<String, String> {
-    let c_key = CString::new(recovery_key).map_err(|e| e.to_string())?;
+fn login_user(recoveryKey: String) -> Result<String, String> {
+    let c_key = CString::new(recoveryKey).map_err(|e| e.to_string())?;
     unsafe {
         let ptr = Login(c_key.as_ptr());
         c_to_string_and_free(ptr)

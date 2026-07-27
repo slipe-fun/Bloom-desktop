@@ -1,6 +1,13 @@
 import { SeedPhraseInput } from "@/components/auth/seed-phrase-input"
+import { motion } from "framer-motion"
+import { Spinner } from "@/components/ui/spinner"
+import { authStore } from "@/store/auth.store"
+import { useSnapshot } from "valtio"
+import { EASING } from "@/constants/animations-easing"
 
 export function AuthSeedMethod() {
+  const { loading } = useSnapshot(authStore)
+
   return (
     <>
       <div className="flex max-w-100 flex-col items-center justify-center gap-2">
@@ -14,7 +21,18 @@ export function AuthSeedMethod() {
         </p>
       </div>
 
-      <SeedPhraseInput />
+      <div className="relative">
+        <SeedPhraseInput />
+         <motion.div
+          className="absolute flex top-0 w-full h-full items-center justify-center"
+          transition={EASING.normalSpring}
+          animate={{
+            opacity: loading ? 1 : 0,
+          }}
+        >
+          <Spinner className="size-10.5" />
+        </motion.div>
+      </div>
     </>
   )
 }
