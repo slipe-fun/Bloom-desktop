@@ -7,7 +7,7 @@ export function SidebarUserBottom() {
     <div className="flex w-full p-4 pt-0">
       <div className="flex w-full rounded-2xl bg-secondary">
         <Button
-          className="flex w-full justify-start rounded-2xl cursor-pointer gap-3 p-3 bg-transparent will-change-transform flex-1 h-auto"
+          className="flex w-full justify-start border-0 rounded-2xl cursor-pointer gap-3 p-3 bg-transparent will-change-transform flex-1 h-auto"
           whileTap={{ scale: 0.985 }}
         >
           <Avatar className="size-10">

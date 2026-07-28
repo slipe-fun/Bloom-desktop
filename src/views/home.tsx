@@ -12,9 +12,10 @@ export function Home() {
       className="h-screen w-screen overflow-hidden"
     >
       <ResizablePanel
-        defaultSize={380}
-        minSize={280}
-        maxSize={480}
+        defaultSize={394}
+        minSize={300}
+        maxSize={500}
+        groupResizeBehavior="preserve-pixel-size"
         className="h-screen"
       >
         <Sidebar/>
@@ -25,7 +26,7 @@ export function Home() {
         className="transition-colors bg-foreground/10 hover:bg-foreground/20"
       />
 
-      <ResizablePanel defaultSize="100%">
+      <ResizablePanel>
         <Main/>
       </ResizablePanel>
     </ResizablePanelGroup>
