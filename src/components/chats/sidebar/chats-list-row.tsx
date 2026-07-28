@@ -5,6 +5,7 @@ import { EASING } from "@/constants/animations-easing"
 import { type Chat } from "./chats-list"
 import { SIDEBAR_USER_BOTTOM_HEIGHT } from "./user-bottom"
 import { homeActions } from "@/store/home.store"
+import ChevronRight from "@/assets/icons/chevron.right.svg?react"
 
 export const ChatsListRow = memo(function ChatsListRow({
   chat,
@@ -13,7 +14,7 @@ export const ChatsListRow = memo(function ChatsListRow({
   onFinishDelete,
   isFirst,
   isLast,
-  isSelected
+  isSelected,
 }: {
   chat: Chat
   isDeleting: boolean
@@ -50,8 +51,8 @@ export const ChatsListRow = memo(function ChatsListRow({
       }}
       whileTap={{ scale: 0.985 }}
       onClick={selectChat}
-      style={isLast ?{ paddingBottom: SIDEBAR_USER_BOTTOM_HEIGHT } : undefined}
-      className={`overflow-hidden px-2 ${isFirst ? "pt-2" : ""}`}
+      style={isLast ? { paddingBottom: SIDEBAR_USER_BOTTOM_HEIGHT } : undefined}
+      className={`overflow-hidden px-2 will-change-transform ${isFirst ? "pt-2" : ""}`}
     >
       <div
         className={`flex w-full cursor-pointer rounded-2xl transition-colors hover:bg-secondary ${
@@ -74,6 +75,7 @@ export const ChatsListRow = memo(function ChatsListRow({
               <span className="text-sm leading-4.25 font-medium">
                 {chat.time}
               </span>
+              <ChevronRight className="size-4" />
             </div>
           </div>
 

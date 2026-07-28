@@ -30,7 +30,7 @@ const INITIAL_CHATS: Chat[] = [
   },
 ]
 
-export function AnimatedChatList() {
+export function ChatsList() {
   const { currentChat } = useSnapshot(homeStore)
   const [chats, setChats] = useState<Chat[]>(INITIAL_CHATS)
   const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set())

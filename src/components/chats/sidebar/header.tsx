@@ -1,4 +1,4 @@
-import { useState, useRef, useLayoutEffect } from "react"
+import { useState, useRef, useLayoutEffect, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Pencil from "@/assets/icons/pencil.svg?react"
 import Message from "@/assets/icons/message.svg?react"
@@ -7,6 +7,7 @@ import X from "@/assets/icons/x.svg?react"
 import { Button } from "@/components/ui/button"
 import { TITLEBAR_HEIGHT } from "@/components/titlebar"
 import { EASING } from "@/constants/animations-easing"
+import { homeActions } from "@/store/home.store"
 
 export default function SidebarHeader() {
   const [isFocused, setIsFocused] = useState(false)
@@ -43,6 +44,16 @@ export default function SidebarHeader() {
       document.fonts.ready.then(measure)
     }
   }, [])
+
+  useEffect(() => {
+    if (isFocused) {
+      homeActions.setIsSearch(true)
+    } else if (searchValue.trim()) {
+      homeActions.setIsSearch(true)
+    } else {
+      homeActions.setIsSearch(false)
+    }
+  }, [isFocused])
 
   return (
     <header
