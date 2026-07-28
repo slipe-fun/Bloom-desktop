@@ -1,7 +1,9 @@
+import SidebarHeader from "./header";
+
 export function Sidebar() {
     return (
-        <div className="flex justify-center items-center w-full h-full">
-            <span>Sidebar</span>
+        <div className="flex flex-col w-full h-full">
+            <SidebarHeader/>
         </div>
     )
 }

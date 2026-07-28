@@ -9,8 +9,6 @@ import {
 export function Home() {
   return (
     <ResizablePanelGroup
-      direction="horizontal"
-      autoSaveId="persistence-chat-layout"
       className="h-screen w-screen overflow-hidden"
     >
       <ResizablePanel
@@ -27,7 +25,7 @@ export function Home() {
         className="transition-colors bg-foreground/10 hover:bg-foreground/20"
       />
 
-      <ResizablePanel defaultSize={500}>
+      <ResizablePanel defaultSize="100%">
         <Main/>
       </ResizablePanel>
     </ResizablePanelGroup>

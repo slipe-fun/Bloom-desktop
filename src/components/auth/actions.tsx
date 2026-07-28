@@ -11,8 +11,6 @@ import {
 import { handleRegister } from "@/lib/auth/handle-register"
 import { handleLogin } from "@/lib/auth/handle-login"
 
-const MotionButton = motion.create(Button)
-
 const BUTTON_LABELS: Record<AuthMethod, string> = {
   seed: "Log in via QR Code",
   qr: "Log in via Seed phrase",
@@ -73,13 +71,12 @@ export function AuthActions() {
       }}
       className="flex flex-col items-center gap-4"
     >
-      <MotionButton
+      <Button
         layout
         variant={isPrimaryAction ? "default" : "secondary"}
         className="h-12 overflow-hidden rounded-full px-6 text-base font-semibold will-change-transform"
         onClick={() => handleMainAction()}
         transition={{ ...EASING.normalSpring, scale: EASING.springy }}
-        whileTap={{ scale: 0.95 }}
       >
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
@@ -94,7 +91,7 @@ export function AuthActions() {
             {seedPhraseComplete ? "Continue" : BUTTON_LABELS[currentMethod]}
           </motion.span>
         </AnimatePresence>
-      </MotionButton>
+      </Button>
 
       <AnimatePresence mode="popLayout" initial={false}>
         {currentMethod !== "success" && (

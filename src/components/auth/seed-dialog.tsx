@@ -10,8 +10,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { SeedPhraseInput } from "./seed-phrase-input"
 
-const MotionButton = motion.create(Button)
-
 export function AuthSeedDialog() {
   const { isPhraseDialog } = useSnapshot(authStore)
 
@@ -36,23 +34,19 @@ export function AuthSeedDialog() {
       </div>
 
       <div className="flex w-full gap-3 p-4 pt-3">
-        <MotionButton
+        <Button
           variant="secondary"
           className="h-12 flex-1 overflow-hidden rounded-full px-6 text-base font-semibold will-change-transform"
-          transition={EASING.springy}
-          whileTap={{ scale: 0.95 }}
         >
           Save as file
-        </MotionButton>
+        </Button>
 
-        <MotionButton
+        <Button
           variant="default"
           className="h-12 flex-1 overflow-hidden rounded-full px-6 text-base font-semibold will-change-transform"
-          transition={EASING.springy}
-          whileTap={{ scale: 0.95 }}
         >
           Continue
-        </MotionButton>
+        </Button>
       </div>
     </CustomModal>
   )
