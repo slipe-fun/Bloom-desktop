@@ -1,6 +1,4 @@
-import { EASING } from "@/constants/animations-easing"
 import { authActions, authStore } from "@/store/auth.store"
-import { motion } from "framer-motion"
 import { useSnapshot } from "valtio/react"
 import {
   CustomModal,

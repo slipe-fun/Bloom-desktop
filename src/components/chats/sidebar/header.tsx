@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useLayoutEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Pencil from "@/assets/icons/pencil.svg?react"
 import Message from "@/assets/icons/message.svg?react"
@@ -11,7 +11,11 @@ import { EASING } from "@/constants/animations-easing"
 export default function SidebarHeader() {
   const [isFocused, setIsFocused] = useState(false)
   const [searchValue, setSearchValue] = useState("")
+  const [placeholderWidth, setPlaceholderWidth] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
+  const placeholderMeasureRef = useRef<HTMLSpanElement>(null)
+
+  const isSearchActive = isFocused || searchValue !== ""
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Escape" || e.key === "Enter") {
@@ -25,7 +29,19 @@ export default function SidebarHeader() {
     inputRef.current?.blur()
   }
 
-  const isSearchActive = isFocused || searchValue !== ""
+  useLayoutEffect(() => {
+    const measure = () => {
+      if (placeholderMeasureRef.current) {
+        setPlaceholderWidth(placeholderMeasureRef.current.offsetWidth)
+      }
+    }
+
+    measure()
+
+    if (typeof document !== "undefined" && "fonts" in document) {
+      document.fonts.ready.then(measure)
+    }
+  }, [])
 
   return (
     <header
@@ -65,6 +81,15 @@ export default function SidebarHeader() {
           <Magnifyingglass className="size-5.5 shrink-0 text-foreground/40" />
 
           <div className="relative z-10 ml-2 flex h-full flex-1 items-center">
+            {/* Скрытый span только для измерения реальной ширины текста плейсхолдера */}
+            <span
+              ref={placeholderMeasureRef}
+              aria-hidden="true"
+              className="pointer-events-none invisible absolute left-0 text-base font-medium whitespace-nowrap"
+            >
+              Search across chats
+            </span>
+
             <AnimatePresence>
               {searchValue === "" && (
                 <motion.span
@@ -87,7 +112,14 @@ export default function SidebarHeader() {
               onBlur={() => setIsFocused(false)}
               onKeyDown={handleKeyDown}
               aria-label="Search across chats"
-              className="h-full w-full bg-transparent text-base font-medium text-foreground outline-none"
+              style={{
+                width: isSearchActive
+                  ? "100%"
+                  : placeholderWidth
+                    ? `${placeholderWidth}px`
+                    : undefined,
+              }}
+              className="h-full bg-transparent text-base font-medium text-foreground outline-none"
             />
           </div>
         </motion.div>
