@@ -7,7 +7,7 @@ import { motion } from "framer-motion"
 import { getCurrentWindow } from "@tauri-apps/api/window"
 import { type } from "@tauri-apps/plugin-os"
 
-export const TITLEBAR_HEIGHT = 42
+export const TITLEBAR_HEIGHT = 36
 
 export function Titlebar() {
   const [isMac, setIsMac] = useState(false)
@@ -38,7 +38,7 @@ export function Titlebar() {
   return (
     <div
       data-tauri-drag-region
-      className={`absolute z-9999 flex h-10.5 w-full items-center ${isMac ? "justify-start" : "justify-end"} text-foreground transition-colors select-none`}
+      className={`absolute z-9999 flex h-9 w-full items-center ${isMac ? "justify-start" : "justify-end"} text-foreground transition-colors select-none`}
     >
       {isMac && (
         <div className="flex min-w-20 items-center">
@@ -59,7 +59,7 @@ export function Titlebar() {
               whileHover={{ opacity: 0.5 }}
               whileTap={{ scale: 0.8 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              className="inline-flex h-10.5 will-change-transform w-10.5 items-center rounded-full justify-center text-muted-foreground"
+              className="inline-flex size-9 will-change-transform items-center rounded-full justify-center text-muted-foreground"
             >
               <LineHorizontal className="h-4.25 w-4.25 text-foreground" />
             </motion.button>
@@ -69,18 +69,18 @@ export function Titlebar() {
               whileHover={{opacity: 0.5 }}
               whileTap={{ scale: 0.8 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              className="inline-flex h-10.5 will-change-transform w-10.5 items-center rounded-full justify-center text-muted-foreground"
+              className="inline-flex size-9 will-change-transform items-center rounded-full justify-center text-muted-foreground"
             >
-              <RectangleStroke className="h-4.25 w-4.25 text-foreground" />
+              <RectangleStroke className="size-4.25 text-foreground" />
             </motion.button>
 
             <motion.button
               onClick={handleClose}
               whileTap={{ scale: 0.8 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              className="inline-flex h-10.5 will-change-transform w-10.5 group transition-colors items-center rounded-full justify-center text-muted-foreground"
+              className="inline-flex size-9 will-change-transform group transition-colors items-center rounded-full justify-center text-muted-foreground"
             >
-              <X className="h-4.5 w-4.5 group-hover:text-red-500 transition-colors text-foreground" />
+              <X className="size-4.25 group-hover:text-red-500 transition-colors text-foreground" />
             </motion.button>
           </div>
         )}
