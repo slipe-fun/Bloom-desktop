@@ -18,7 +18,8 @@ export default function SidebarHeader() {
   const isSearchActive = isFocused || searchValue !== ""
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Escape" || e.key === "Enter") {
+    if (e.key === "Escape") {
+      setSearchValue("")
       inputRef.current?.blur()
     }
   }
