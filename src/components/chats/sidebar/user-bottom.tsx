@@ -2,9 +2,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import Gear from "@/assets/icons/gear.svg?react"
 
+export const SIDEBAR_USER_BOTTOM_HEIGHT = 88
+
 export function SidebarUserBottom() {
   return (
-    <div className="flex w-full p-4 pt-0">
+    <div className="flex w-full p-4 bg-linear-to-t from-background from-40% via-background/50 via-55% to-transparent to-100% pt-2 absolute bottom-0">
       <div className="flex w-full rounded-2xl bg-secondary">
         <Button
           className="flex w-full justify-start border-0 rounded-2xl cursor-pointer gap-3 p-3 bg-transparent will-change-transform flex-1 h-auto"

@@ -11,7 +11,7 @@ function ScrollArea({
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
-      className={cn("relative", className)}
+      className={cn("relative group/scroll-area", className)}
       {...props}
     >
       <ScrollAreaPrimitive.Viewport
@@ -37,7 +37,7 @@ function ScrollBar({
       data-orientation={orientation}
       orientation={orientation}
       className={cn(
-        "group flex touch-none p-0.75 transition-colors select-none",
+        "group flex touch-none p-0.75 transition-all duration-200 select-none opacity-0 group-hover/scroll-area:opacity-100",
         "data-horizontal:h-2.5 data-horizontal:flex-col data-horizontal:items-center data-horizontal:border-t data-horizontal:border-t-transparent",
         "data-vertical:h-full data-vertical:w-2.5 data-vertical:justify-center",
         className
@@ -99,7 +99,7 @@ function VirtuosoScrollArea({
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
-      className={cn("relative h-full w-full overflow-hidden", className)}
+      className={cn("relative h-full w-full overflow-hidden group/scroll-area", className)}
     >
       <ScrollAreaPrimitive.Viewport
         ref={mergedRef}
