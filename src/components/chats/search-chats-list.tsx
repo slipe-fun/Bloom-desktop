@@ -15,8 +15,8 @@ export interface Chat {
 }
 
 interface SearchChatsListProps {
-    className?: string,
-    isDialog: boolean
+  className?: string
+  isDialog: boolean
 }
 
 const INITIAL_CHATS: Chat[] = [
@@ -76,7 +76,7 @@ export function SearchChatsList({ className, isDialog }: SearchChatsListProps) {
             <SearchChatsListRow
               chat={chat}
               isFirst={index === 0}
-              paddingBottom={isDialog ? 8 : index === chats.length - 1 ? SIDEBAR_USER_BOTTOM_HEIGHT : 0}
+              paddingBottom={index === chats.length - 1 ? (isDialog ? 8 : SIDEBAR_USER_BOTTOM_HEIGHT) : 0}
             />
           )}
         />
