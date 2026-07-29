@@ -71,6 +71,7 @@ export default function SidebarHeader() {
           size="icon"
           className="size-11 rounded-full"
           aria-label="New chat"
+          onClick={() => homeActions.setIsNewChatDialog(true)}
         >
           <Pencil className="size-6.5" />
         </Button>

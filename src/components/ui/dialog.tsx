@@ -43,12 +43,12 @@ export function CustomModal({
                 render={
                   <motion.div
                     className={cn(
-                      'w-full max-w-md rounded-[40px] bg-popover shadow-[0_5px_24px_0px_rgba(0,0,0,0.08)] focus:outline-none',
+                      'w-full max-w-md rounded-[40px] overflow-hidden bg-popover shadow-[0_5px_24px_0px_rgba(0,0,0,0.08)] focus:outline-none',
                       className
                     )}
-                    initial={{ opacity: 0, y: "-25%" }}
+                    initial={{ opacity: 0, y: -60 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: "25%" }}
+                    exit={{ opacity: 0, y: 60 }}
                     transition={EASING.middleSpring}
                   />
                 }
