@@ -5,6 +5,7 @@ import { VirtuosoScrollArea } from "@/components/ui/scroll-area"
 import { ChatsListRow } from "./chats-list-row"
 import { useSnapshot } from "valtio"
 import { homeStore } from "@/store/home.store"
+import { AnimatePresence } from "framer-motion"
 
 export interface Chat {
   id: string
@@ -78,43 +79,45 @@ export function ChatsList() {
   const firstAvailableChat = chats.find((c) => !deletingIds.has(c.id))
 
   return (
-    <div className="flex h-full w-full flex-col">
-      <div className="flex justify-between gap-2 border-b border-foreground/10 p-3">
-        <Button size="sm" onClick={handleAddChat}>
-          + Добавить чат
-        </Button>
-        <Button
-          size="sm"
-          variant="destructive"
-          onClick={() =>
-            firstAvailableChat && handleStartDelete(firstAvailableChat.id)
-          }
-          disabled={!firstAvailableChat}
-        >
-          Удалить первый
-        </Button>
-      </div>
+    <AnimatePresence initial={true}>
+      <div className="flex h-full w-full flex-col">
+        <div className="flex justify-between gap-2 border-b border-foreground/10 p-3">
+          <Button size="sm" onClick={handleAddChat}>
+            + Добавить чат
+          </Button>
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={() =>
+              firstAvailableChat && handleStartDelete(firstAvailableChat.id)
+            }
+            disabled={!firstAvailableChat}
+          >
+            Удалить первый
+          </Button>
+        </div>
 
-      <div className="flex-1">
-        <Virtuoso
-          className="h-full"
-          data={chats}
-          components={{ Scroller: VirtuosoScrollArea }}
-          computeItemKey={(_, chat) => chat.id}
-          increaseViewportBy={{ top: 200, bottom: 200 }}
-          itemContent={(index, chat) => (
-            <ChatsListRow
-              chat={chat}
-              isSelected={currentChat === chat.id}
-              isDeleting={deletingIds.has(chat.id)}
-              seenIdsRef={seenIds}
-              onFinishDelete={handleFinishDelete}
-              isFirst={index === 0}
-              isLast={index === chats.length - 1}
-            />
-          )}
-        />
+        <div className="flex-1">
+          <Virtuoso
+            className="h-full"
+            data={chats}
+            components={{ Scroller: VirtuosoScrollArea }}
+            computeItemKey={(_, chat) => chat.id}
+            increaseViewportBy={{ top: 200, bottom: 200 }}
+            itemContent={(index, chat) => (
+              <ChatsListRow
+                chat={chat}
+                isSelected={currentChat === chat.id}
+                isDeleting={deletingIds.has(chat.id)}
+                seenIdsRef={seenIds}
+                onFinishDelete={handleFinishDelete}
+                isFirst={index === 0}
+                isLast={index === chats.length - 1}
+              />
+            )}
+          />
+        </div>
       </div>
-    </div>
+    </AnimatePresence>
   )
 }
