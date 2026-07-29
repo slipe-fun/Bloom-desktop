@@ -11,7 +11,7 @@ export function Sidebar() {
   const { isSearch } = useSnapshot(homeStore)
 
   return (
-    <div className="relative flex h-full w-full flex-col overflow-hidden">
+    <div className="relative flex h-full bg-background w-full flex-col overflow-hidden">
       <SidebarHeader />
       <AnimatePresence initial={false} mode="popLayout">
         <motion.div
