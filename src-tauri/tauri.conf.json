@@ -17,9 +17,9 @@
         "height": 800,
         "resizable": true,
         "fullscreen": false,
-        "decorations": true,          
+        "decorations": true,
         "titleBarStyle": "Overlay",
-        "hiddenTitle": true     
+        "hiddenTitle": true
       }
     ],
     "security": {
@@ -37,7 +37,7 @@
       "icons/icon.ico"
     ],
     "resources": [
-      "libbloom.dll"
+      "native/libbloom.dll"
     ]
   }
 }

@@ -5,4 +5,5 @@
 libbloom.dll
 libbloom.lib
 libbloom.h
+libbloom.a
 app_data.vault
