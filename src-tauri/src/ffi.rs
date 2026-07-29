@@ -1,4 +1,4 @@
-use std::ffi::{CStr, c_char, c_int, c_uchar};
+use std::ffi::{c_char, c_int, c_uchar, CStr};
 
 #[cfg(target_os = "windows")]
 #[link(name = "legacy_stdio_definitions")]
@@ -6,8 +6,8 @@ extern "C" {}
 
 pub type ChatsCallback = Option<unsafe extern "C" fn(json_data: *const c_char)>;
 pub type MessagesCallback = Option<unsafe extern "C" fn(json_data: *const c_char)>;
+pub type UserCallback = Option<unsafe extern "C" fn(json_data: *const c_char)>;
 
-// C-FFI imports
 extern "C" {
     pub fn InitClient(
         base_url: *const c_char,
@@ -23,6 +23,7 @@ extern "C" {
     pub fn RestoreSession() -> *mut c_char;
     pub fn ClearCredentials();
     pub fn GetMe() -> *mut c_char;
+    pub fn GetOrFetchMe() -> *mut c_char;
     pub fn SearchUsers(query: *const c_char) -> *mut c_char;
     pub fn EditUser(
         username: *const c_char,
@@ -54,6 +55,8 @@ extern "C" {
     pub fn UnregisterChatsCallback();
     pub fn RegisterMessagesCallback(cb: MessagesCallback);
     pub fn UnregisterMessagesCallback();
+    pub fn RegisterUserCallback(cb: UserCallback);
+    pub fn UnregisterUserCallback();
 }
 
 pub unsafe fn c_to_string_and_free(ptr: *mut c_char) -> Result<String, String> {

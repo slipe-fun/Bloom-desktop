@@ -12,6 +12,14 @@ pub fn getMe() -> Result<String, String> {
 }
 
 #[tauri::command]
+pub fn getOrFetchMe() -> Result<String, String> {
+    unsafe {
+        let ptr = ffi::GetOrFetchMe();
+        ffi::c_to_string_and_free(ptr)
+    }
+}
+
+#[tauri::command]
 pub fn searchUsers(query: String) -> Result<String, String> {
     let c_query = CString::new(query).map_err(|e| e.to_string())?;
     unsafe {
@@ -40,7 +48,8 @@ pub fn editUser(
     let has_description = if description.is_some() { 1 } else { 0 };
 
     let c_username = CString::new(username.unwrap_or_default()).map_err(|e| e.to_string())?;
-    let c_display_name = CString::new(displayName.unwrap_or_default()).map_err(|e| e.to_string())?;
+    let c_display_name =
+        CString::new(displayName.unwrap_or_default()).map_err(|e| e.to_string())?;
     let c_description = CString::new(description.unwrap_or_default()).map_err(|e| e.to_string())?;
 
     unsafe {
