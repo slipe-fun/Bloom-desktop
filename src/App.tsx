@@ -22,7 +22,7 @@ export function App() {
   return (
     <div className="flex min-h-svh flex-col bg-secondary-background">
       <Titlebar />
-      <AnimatePresence mode="popLayout" initial>
+      <AnimatePresence mode="popLayout" initial={false}>
         <motion.main
           key={isAuthenticated ? "chats" : "auth"}
           initial={{ opacity: 0 }}
@@ -31,7 +31,9 @@ export function App() {
           transition={EASING.middleSpring}
           className="size-full"
         >
-          {isAuthenticated ? <Home /> : <Auth />}
+          <AnimatePresence initial>
+            {isAuthenticated ? <Home /> : <Auth />}
+          </AnimatePresence>
         </motion.main>
       </AnimatePresence>
     </div>
