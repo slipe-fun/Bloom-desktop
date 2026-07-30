@@ -94,7 +94,6 @@ export default function SidebarHeader() {
           <Magnifyingglass className="size-5.5 shrink-0 text-foreground/40" />
 
           <div className="relative z-10 ml-2 flex h-full flex-1 items-center">
-            {/* Скрытый span только для измерения реальной ширины текста плейсхолдера */}
             <span
               ref={placeholderMeasureRef}
               aria-hidden="true"
