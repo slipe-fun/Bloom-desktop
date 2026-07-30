@@ -11,13 +11,26 @@ import { EASING } from "./constants/animations-easing"
 
 export function App() {
   const { isAuthenticated } = useSnapshot(authStore)
-  const { user } = useUserListener()
+  const { user, isLoading } = useUserListener()
 
   useEffect(() => {
     authActions.setIsAuthenticated(!!user)
-    getCurrentWindow().show()
-    console.log(user)
-  }, [])
+  }, [user])
+
+  useEffect(() => {
+    if (!isLoading) {
+      getCurrentWindow().show()
+    }
+  }, [isLoading])
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-svh flex-col bg-secondary-background">
+        <Titlebar />
+        {/* тут можно пустой div или спиннер — по вашему усмотрению */}
+      </div>
+    )
+  }
 
   return (
     <div className="flex min-h-svh flex-col bg-secondary-background">

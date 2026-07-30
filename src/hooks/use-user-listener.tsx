@@ -6,6 +6,7 @@ import { globalActions } from "@/store/global.store"
 
 export function useUserListener() {
   const [user, setUser] = useState<UserProfile | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     let unlisten: UnlistenFn | undefined
@@ -36,6 +37,8 @@ export function useUserListener() {
         if (initialUser) applyUser(initialUser)
       } catch (err) {
         console.error("Failed to invoke 'getOrFetchMe':", err)
+      } finally {
+        if (isMounted) setIsLoading(false)
       }
     }
 
@@ -47,5 +50,5 @@ export function useUserListener() {
     }
   }, [])
 
-  return { user }
+  return { user, isLoading }
 }
