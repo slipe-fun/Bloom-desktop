@@ -83,7 +83,7 @@ export function ChatsList() {
       <div className="flex h-full w-full flex-col">
         <div className="flex justify-between gap-2 border-b border-foreground/10 p-3">
           <Button size="sm" onClick={handleAddChat}>
-            + Добавить чат
+            + Add
           </Button>
           <Button
             size="sm"
@@ -93,7 +93,7 @@ export function ChatsList() {
             }
             disabled={!firstAvailableChat}
           >
-            Удалить первый
+            Delete
           </Button>
         </div>
 
