@@ -5,7 +5,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window"
 import { useEffect } from "react"
 import { useSnapshot } from "valtio"
 import { authActions, authStore } from "@/store/auth.store"
-import { useUserListener } from "./lib/user/user-listener"
+import { useUserListener } from "./hooks/use-user-listener"
 import { AnimatePresence, motion } from "framer-motion"
 import { EASING } from "./constants/animations-easing"
 
@@ -14,8 +14,9 @@ export function App() {
   const { user } = useUserListener()
 
   useEffect(() => {
-    authActions.setIsAuthenticated(user)
+    authActions.setIsAuthenticated(!!user)
     getCurrentWindow().show()
+    console.log(user)
   }, [])
 
   return (
