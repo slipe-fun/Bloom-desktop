@@ -97,7 +97,8 @@ function SeedWordField({
       className={cn(
         "relative flex h-12 w-full items-center overflow-hidden rounded-lg border border-transparent bg-secondary px-4 transition-all duration-200",
         !readOnly &&
-          "focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary/50"
+          "focus-within:border-transparent focus-within:ring-2 focus-within:ring-primary/50",
+        readOnly && "bg-popover-secondary"
       )}
     >
       <input

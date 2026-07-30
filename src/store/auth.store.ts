@@ -10,6 +10,7 @@ interface AuthStore {
   loading: boolean
   isPhraseDialog: boolean
   isAuthenticated: boolean
+  isLogin: boolean
 }
 
 export const authStore = proxy<AuthStore>({
@@ -17,7 +18,8 @@ export const authStore = proxy<AuthStore>({
   method: "qr",
   loading: false,
   isPhraseDialog: false,
-  isAuthenticated: false
+  isAuthenticated: false,
+  isLogin: false,
 })
 
 export const authActions = {
@@ -42,7 +44,10 @@ export const authActions = {
   },
   setIsAuthenticated: (isAuthenticated: boolean) => {
     authStore.isAuthenticated = isAuthenticated
-  }
+  },
+  setIsLogin: (isLogin: boolean) => {
+    authStore.isLogin = isLogin
+  },
 }
 
 export const isSeedPhraseComplete = (seedPhrase: readonly string[]) =>

@@ -19,7 +19,7 @@ const BUTTON_LABELS: Record<AuthMethod, string> = {
 }
 
 export function AuthActions() {
-  const { method: currentMethod, seedPhrase } = useSnapshot(authStore)
+  const { method: currentMethod, seedPhrase, isLogin } = useSnapshot(authStore)
 
   const isSignUp = currentMethod === "signUp"
   const seedPhraseComplete = isSeedPhraseComplete(seedPhrase)
@@ -28,6 +28,7 @@ export function AuthActions() {
 
   const handleMainAction = async () => {
     if (seedPhraseComplete && currentMethod !== "success") {
+      authActions.setIsLogin(true)
       authActions.setLoading(true)
 
       await handleLogin(seedPhrase).then(() => {
@@ -43,6 +44,7 @@ export function AuthActions() {
           authActions.setAuthMethod("seed")
           break
         case "signUp":
+          authActions.setIsLogin(false)
           authActions.setLoading(true)
 
           await handleRegister().then(() => {
@@ -51,8 +53,11 @@ export function AuthActions() {
           })
           break
         case "success":
-          console.log(123)
-          authActions.setIsPhraseDialog(true)
+          if (isLogin) {
+            authActions.setIsAuthenticated(true)
+          } else {
+            authActions.setIsPhraseDialog(true)
+          }
           break
       }
     }

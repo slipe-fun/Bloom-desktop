@@ -39,7 +39,7 @@ export function AuthSeedDialog() {
       <div className="flex w-full gap-3 p-4 pt-3 border-t border-foreground/10">
         <Button
           variant="secondary"
-          className="h-12 flex-1 overflow-hidden rounded-full px-6 text-base font-semibold will-change-transform"
+          className="h-12 flex-1 overflow-hidden bg-popover-secondary rounded-full px-6 text-base font-semibold will-change-transform"
         >
           Save as file
         </Button>
