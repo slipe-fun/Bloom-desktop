@@ -1,15 +1,26 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import Gear from "@/assets/icons/gear.svg?react"
+import Gear from "@/assets/icons/lottie/gear.lottie"
+import { type DotLottie, DotLottieReact } from "@lottiefiles/dotlottie-react"
+import { useState } from "react"
 
 export const SIDEBAR_USER_BOTTOM_HEIGHT = 88
 
 export function SidebarUserBottom() {
+  const [dotLottie, setDotLottie] = useState<DotLottie | null>(null)
+
+  const handleLottieHover = () => {
+    if (dotLottie) {
+      dotLottie.setFrame(0)
+      dotLottie.play()
+    }
+  }
+
   return (
-    <div className="flex w-full p-4 bg-linear-to-t from-background from-40% via-background/50 via-55% to-transparent to-100% pt-2 absolute bottom-0">
+    <div className="absolute bottom-0 flex w-full bg-linear-to-t from-background from-40% via-background/50 via-55% to-transparent to-100% p-4 pt-2">
       <div className="flex w-full rounded-2xl bg-secondary">
         <Button
-          className="flex w-full justify-start border-0 rounded-2xl cursor-pointer gap-3 p-3 bg-transparent will-change-transform flex-1 h-auto"
+          className="flex h-auto w-full flex-1 cursor-pointer justify-start gap-3 rounded-2xl border-0 bg-transparent p-3 will-change-transform"
           whileTap={{ scale: 0.985 }}
         >
           <Avatar className="size-10">
@@ -19,9 +30,9 @@ export function SidebarUserBottom() {
             />
             <AvatarFallback className="text-base">DD</AvatarFallback>
           </Avatar>
-          
-          <div className="flex flex-col gap-1 justify-start">
-            <span className="text-base text-foreground leading-4.75 font-semibold">
+
+          <div className="flex flex-col justify-start gap-1">
+            <span className="text-base leading-4.75 font-semibold text-foreground">
               Dikiy Dikiens
             </span>
 
@@ -29,7 +40,7 @@ export function SidebarUserBottom() {
               <span className="flex size-3 items-center justify-center rounded-full bg-green-500/35">
                 <span className="size-2 rounded-full bg-green-500" />
               </span>
-              <span className="text-sm font-medium text-green-500 leading-4.25">
+              <span className="text-sm leading-4.25 font-medium text-green-500">
                 Online
               </span>
             </div>
@@ -41,8 +52,14 @@ export function SidebarUserBottom() {
           size="icon"
           className="size-16 rounded-2xl bg-transparent will-change-transform"
           aria-label="New chat"
+          onMouseEnter={handleLottieHover}
         >
-          <Gear className="size-7" />
+          <DotLottieReact
+            src={Gear}
+            speed={1.5}
+            className="size-7 dark:invert"
+            dotLottieRefCallback={setDotLottie}
+          />
         </Button>
       </div>
     </div>

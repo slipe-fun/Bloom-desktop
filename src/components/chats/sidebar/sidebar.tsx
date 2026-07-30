@@ -1,6 +1,6 @@
 import { useSnapshot } from "valtio"
 import { ChatsList } from "./chats-list"
-import SidebarHeader from "./header"
+import SidebarHeader from "./sidebar-header/sidebar-header"
 import { SidebarUserBottom } from "./user-bottom"
 import { homeStore } from "@/store/home.store"
 import { AnimatePresence, motion } from "framer-motion"

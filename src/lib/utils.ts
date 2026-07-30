@@ -25,3 +25,4 @@ export function base64ToJson<T = unknown>(base64: string): T {
   )
   return obj
 }
+
