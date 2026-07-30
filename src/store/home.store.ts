@@ -4,12 +4,14 @@ interface HomeStore {
   currentChat: string
   isSearch: boolean
   isNewChatDialog: boolean
+  searchValue: string
 }
 
 export const homeStore = proxy<HomeStore>({
   currentChat: "",
   isSearch: false,
-  isNewChatDialog: false
+  isNewChatDialog: false,
+  searchValue: ""
 })
 
 export const homeActions = {
@@ -21,5 +23,8 @@ export const homeActions = {
   },
   setIsNewChatDialog: (isNewChatDialog: boolean) => {
     homeStore.isNewChatDialog = isNewChatDialog
-  }
+  },
+  setSearchValue:(searchValue: string) => {
+    homeStore.searchValue = searchValue
+  },
 }

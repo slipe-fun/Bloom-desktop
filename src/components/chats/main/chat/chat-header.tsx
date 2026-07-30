@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { homeActions } from "@/store/home.store"
 import ChevronLeft from "@/assets/icons/chevron.left.svg?react"
 import { EASING } from "@/constants/animations-easing"
-import { TITLEBAR_HEIGHT } from "../titlebar"
+import { TITLEBAR_HEIGHT } from "@/components/titlebar"
 
 export function ChatHeader() {
   const [dotLottie, setDotLottie] = useState<DotLottie | null>(null)

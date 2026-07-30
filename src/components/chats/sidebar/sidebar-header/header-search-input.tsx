@@ -3,11 +3,12 @@ import { motion, AnimatePresence } from "framer-motion"
 import Magnifyingglass from "@/assets/icons/magnifyingglass.svg?react"
 import X from "@/assets/icons/x.svg?react"
 import { EASING } from "@/constants/animations-easing"
-import { homeActions } from "@/store/home.store"
+import { homeActions, homeStore } from "@/store/home.store"
+import { useSnapshot } from "valtio"
 
 export function HeaderSearchInput() {
   const [isFocused, setIsFocused] = useState(false)
-  const [searchValue, setSearchValue] = useState("")
+  const { searchValue } = useSnapshot(homeStore)
   const [placeholderWidth, setPlaceholderWidth] = useState(0)
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -17,14 +18,14 @@ export function HeaderSearchInput() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Escape") {
-      setSearchValue("")
+      homeActions.setSearchValue("")
       inputRef.current?.blur()
     }
   }
 
   const handleClear = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    setSearchValue("")
+    homeActions.setSearchValue("")
     inputRef.current?.blur()
   }
 
@@ -91,7 +92,7 @@ export function HeaderSearchInput() {
             ref={inputRef}
             type="text"
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={(e) => homeActions.setSearchValue(e.target.value)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}
