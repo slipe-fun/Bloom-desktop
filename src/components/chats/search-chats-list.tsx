@@ -52,7 +52,7 @@ export function SearchChatsList({ className, isDialog }: SearchChatsListProps) {
     <div className={cn("flex h-full w-full flex-col", className)}>
       <div className="flex justify-between gap-2 border-b border-foreground/10 p-3">
         <Button size="sm" onClick={handleAddChat}>
-          + Добавить чат
+          + Add
         </Button>
 
         <Button
@@ -61,7 +61,7 @@ export function SearchChatsList({ className, isDialog }: SearchChatsListProps) {
           onClick={handleDeleteFirst}
           disabled={!chats.length}
         >
-          Удалить первый
+          Delete
         </Button>
       </div>
 
