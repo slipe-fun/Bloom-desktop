@@ -27,7 +27,7 @@ export function AuthActions() {
     isSignUp || currentMethod === "success" || seedPhraseComplete
 
   const handleMainAction = async () => {
-    if (seedPhraseComplete) {
+    if (seedPhraseComplete && currentMethod !== "success") {
       authActions.setLoading(true)
 
       await handleLogin(seedPhrase).then(() => {
@@ -51,6 +51,7 @@ export function AuthActions() {
           })
           break
         case "success":
+          console.log(123)
           authActions.setIsPhraseDialog(true)
           break
       }

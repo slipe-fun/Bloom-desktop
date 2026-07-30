@@ -11,6 +11,11 @@ import { SeedPhraseInput } from "./seed-phrase-input"
 export function AuthSeedDialog() {
   const { isPhraseDialog } = useSnapshot(authStore)
 
+  const confirmAuth = () => {
+    authActions.setIsPhraseDialog(false)
+    authActions.setIsAuthenticated(true)
+  }
+
   return (
     <CustomModal
       className="w-108.5"
@@ -41,6 +46,7 @@ export function AuthSeedDialog() {
 
         <Button
           variant="default"
+          onClick={confirmAuth}
           className="h-12 flex-1 overflow-hidden rounded-full px-6 text-base font-semibold will-change-transform"
         >
           Continue

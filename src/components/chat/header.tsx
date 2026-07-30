@@ -11,7 +11,7 @@ export function ChatHeader() {
         aria-label="New chat"
         onClick={() => homeActions.setCurrentChat("")}
       >
-        <Pencil className="size-6.5" />
+        {/* <Pencil className="size-6.5" /> */}
       </Button>
     </div>
   )

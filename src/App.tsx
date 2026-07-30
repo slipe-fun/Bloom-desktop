@@ -4,32 +4,35 @@ import { Home } from "@/views/home"
 import { getCurrentWindow } from "@tauri-apps/api/window"
 import { useEffect } from "react"
 import { useSnapshot } from "valtio"
-import { authStore } from "@/store/auth.store"
-import { invoke } from "@tauri-apps/api/core"
+import { authActions, authStore } from "@/store/auth.store"
 import { useUserListener } from "./lib/user/user-listener"
+import { AnimatePresence, motion } from "framer-motion"
+import { EASING } from "./constants/animations-easing"
 
 export function App() {
   const { isAuthenticated } = useSnapshot(authStore)
-  useUserListener()
+  const { user } = useUserListener()
 
   useEffect(() => {
-    // getCurrentWindow().show()
-      (async () => {
-      try {
-        const me = (await invoke("getMe")) as string
-
-        console.log(123123)
-      } catch (err) {
-        console.error(err)
-      }
-      })()
+    authActions.setIsAuthenticated(user)
+    getCurrentWindow().show()
   }, [])
 
   return (
-    <div className="flex min-h-svh bg-secondary-background flex-col">
+    <div className="flex min-h-svh flex-col bg-secondary-background">
       <Titlebar />
-      {/* <Auth /> */}
-      <Home />
+      <AnimatePresence mode="popLayout" initial>
+        <motion.main
+          key={isAuthenticated ? "chats" : "auth"}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={EASING.middleSpring}
+          className="size-full"
+        >
+          {isAuthenticated ? <Home /> : <Auth />}
+        </motion.main>
+      </AnimatePresence>
     </div>
   )
 }
