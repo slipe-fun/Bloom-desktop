@@ -10,11 +10,13 @@ import { AnimatePresence, motion } from "framer-motion"
 import { EASING } from "./constants/animations-easing"
 
 export function App() {
-  const { isAuthenticated } = useSnapshot(authStore)
+  const { isAuthenticated, method } = useSnapshot(authStore)
   const { user, isLoading } = useUserListener()
 
   useEffect(() => {
-    authActions.setIsAuthenticated(!!user)
+    if (method === "qr") {
+      authActions.setIsAuthenticated(!!user)
+    }
   }, [user])
 
   useEffect(() => {
