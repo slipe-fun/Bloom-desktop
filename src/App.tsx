@@ -8,6 +8,7 @@ import { authActions, authStore } from "@/store/auth.store"
 import { useUserListener } from "./hooks/use-user-listener"
 import { AnimatePresence, motion } from "framer-motion"
 import { EASING } from "./constants/animations-easing"
+import { titlebarActions } from "./store/titlebar.store"
 
 export function App() {
   const { isAuthenticated, method } = useSnapshot(authStore)
@@ -24,6 +25,14 @@ export function App() {
       getCurrentWindow().show()
     }
   }, [isLoading])
+
+  useEffect(() => {
+    titlebarActions.push({
+      title: isAuthenticated ? "Chats" : "Log in",
+      subtitle: isAuthenticated ? undefined : "QR Code",
+      icon: isAuthenticated ? "message" : "person"
+    })
+  }, [isAuthenticated])
 
   if (isLoading) {
     return (

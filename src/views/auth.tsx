@@ -4,10 +4,26 @@ import { AuthSeedMethod } from "@/components/auth/seed-method"
 import { AuthSignUpMethod } from "@/components/auth/sign-up-method"
 import { AuthSuccessMethod } from "@/components/auth/success-method"
 import { EASING } from "@/constants/animations-easing"
-import { authStore } from "@/store/auth.store"
+import { authStore, type AuthMethod } from "@/store/auth.store"
 import { AnimatePresence, motion } from "framer-motion"
 import { useSnapshot } from "valtio/react"
 import { AuthSeedDialog } from "@/components/auth/seed-dialog"
+import { useEffect } from "react"
+import { titlebarActions } from "@/store/titlebar.store"
+
+const TITLEBAR_SUBTITLES: Record<AuthMethod, string | undefined> = {
+  seed: "Seed phrase",
+  qr: "Qr code",
+  success: undefined,
+  signUp: undefined
+}
+
+const TITLEBAR_TITLES: Record<AuthMethod, string> = {
+  seed: "Log in",
+  qr: "Log in",
+  success: "Success!",
+  signUp: "Sign up"
+}
 
 export function Auth() {
   const { method } = useSnapshot(authStore)
@@ -26,6 +42,13 @@ export function Auth() {
         return null
     }
   }
+
+  useEffect(() => {
+    titlebarActions.push({
+      title: TITLEBAR_TITLES[method],
+      subtitle: TITLEBAR_SUBTITLES[method],
+    })
+  }, [method])
 
   return (
     <section className="flex h-screen bg-background w-screen flex-col items-center justify-center gap-6">

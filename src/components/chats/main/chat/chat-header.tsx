@@ -9,6 +9,7 @@ import { homeActions } from "@/store/home.store"
 import ChevronLeft from "@/assets/icons/chevron.left.svg?react"
 import { EASING } from "@/constants/animations-easing"
 import { TITLEBAR_HEIGHT } from "@/components/titlebar"
+import { titlebarActions } from "@/store/titlebar.store"
 
 export function ChatHeader() {
   const [dotLottie, setDotLottie] = useState<DotLottie | null>(null)
@@ -20,6 +21,14 @@ export function ChatHeader() {
     }
   }
 
+  const closeChat = () => {
+    homeActions.setCurrentChat("")
+
+    titlebarActions.push({
+      title: "Chats",
+      icon: "message",
+    })
+  }
   return (
     <div
       style={{ paddingTop: TITLEBAR_HEIGHT }}
@@ -37,7 +46,7 @@ export function ChatHeader() {
             rest: {},
             hover: {},
           }}
-          onClick={() => homeActions.setCurrentChat("")}
+          onClick={closeChat}
         >
           <motion.div
             variants={{

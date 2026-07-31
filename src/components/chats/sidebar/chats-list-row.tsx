@@ -6,6 +6,7 @@ import { type Chat } from "./chats-list"
 import { SIDEBAR_USER_BOTTOM_HEIGHT } from "./user-bottom"
 import { homeActions } from "@/store/home.store"
 import ChevronRight from "@/assets/icons/chevron.right.svg?react"
+import { titlebarActions } from "@/store/titlebar.store"
 
 export const ChatsListRow = memo(function ChatsListRow({
   chat,
@@ -34,6 +35,12 @@ export const ChatsListRow = memo(function ChatsListRow({
 
   const selectChat = () => {
     homeActions.setCurrentChat(chat.id)
+    
+    titlebarActions.push({
+      title: "Chats",
+      subtitle: chat.id,
+      icon: "message",
+    })
   }
   return (
     <motion.div

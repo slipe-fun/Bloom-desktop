@@ -10,6 +10,7 @@ import {
 } from "@/store/auth.store"
 import { handleRegister } from "@/lib/auth/handle-register"
 import { handleLogin } from "@/lib/auth/handle-login"
+import { useEffect } from "react"
 
 const BUTTON_LABELS: Record<AuthMethod, string> = {
   seed: "Log in via QR Code",
@@ -28,7 +29,6 @@ export function AuthActions() {
 
   const handleMainAction = async () => {
     if (seedPhraseComplete && currentMethod !== "success") {
-      authActions.setIsLogin(true)
       authActions.setLoading(true)
 
       await handleLogin(seedPhrase).then(() => {
@@ -38,9 +38,11 @@ export function AuthActions() {
     } else {
       switch (currentMethod) {
         case "seed":
+          authActions.setIsLogin(true)
           authActions.setAuthMethod("qr")
           break
         case "qr":
+          authActions.setIsLogin(true)
           authActions.setAuthMethod("seed")
           break
         case "signUp":
@@ -66,7 +68,7 @@ export function AuthActions() {
   const handleFooterToggle = () => {
     authActions.setAuthMethod(isSignUp ? "qr" : "signUp")
   }
-
+  
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95, filter: "blur(8px)" }}
