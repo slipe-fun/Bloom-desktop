@@ -80,7 +80,7 @@ export const ChatsListRow = memo(function ChatsListRow({
           </div>
 
           <div className="flex items-center justify-between gap-2">
-            <p className="truncate text-[13px] leading-snug text-foreground/40">
+            <p className="truncate text-sm leading-4.25 text-foreground/40">
               {chat.message}
             </p>
 
