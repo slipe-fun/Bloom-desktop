@@ -95,10 +95,10 @@ function SeedWordField({
   return (
     <div
       className={cn(
-        "relative flex h-12 w-full items-center overflow-hidden rounded-lg border border-transparent bg-secondary px-4 transition-all duration-200 shadow-[0_0px_24px_4px_rgba(0,0,0,0.04)",
+        "relative flex h-12 w-full items-center overflow-hidden rounded-lg border border-transparent bg-secondary px-4 transition-all duration-200 shadow-[0_0px_24px_4px_rgba(0,0,0,0.04)]",
         !readOnly &&
           "focus-within:border-transparent focus-within:ring-2 focus-within:ring-selection-background/50",
-        readOnly && "bg-popover-secondary"
+        readOnly && "bg-popover-secondary shadow-none"
       )}
     >
       <input

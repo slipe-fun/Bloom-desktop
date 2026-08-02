@@ -10,10 +10,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:opacity-50 shadow-[0_0px_24px_4px_rgba(0,0,0,0.08)",
+        default: "bg-primary text-primary-foreground hover:opacity-50 shadow-[0_0px_24px_4px_rgba(0,0,0,0.08)]",
         secondary:
-          "bg-secondary text-secondary-foreground hover:opacity-50 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground shadow-[0_0px_24px_4px_rgba(0,0,0,0.04)",
-        monochrome: "bg-selection-background text-selection-foreground shadow-[0_0px_24px_4px_rgba(0,0,0,0.08)"
+          "bg-secondary text-secondary-foreground hover:opacity-50 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground shadow-[0_0px_24px_4px_rgba(0,0,0,0.04)]",
+        monochrome: "bg-selection-background text-selection-foreground shadow-[0_0px_24px_4px_rgba(0,0,0,0.08)]"
       },
       size: {
         default:

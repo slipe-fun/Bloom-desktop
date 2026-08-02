@@ -8,7 +8,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { homeActions } from "@/store/home.store"
 import ChevronLeft from "@/assets/icons/chevron.left.svg?react"
 import { EASING } from "@/constants/animations-easing"
-import { TITLEBAR_HEIGHT } from "@/components/titlebar"
 import { titlebarActions } from "@/store/titlebar.store"
 
 export function ChatHeader() {
@@ -31,8 +30,7 @@ export function ChatHeader() {
   }
   return (
     <div
-      style={{ paddingTop: TITLEBAR_HEIGHT }}
-      className="absolute top-0 left-0 z-10 flex w-full items-center justify-between border-b border-foreground/10 bg-background px-4 pb-3"
+      className="absolute top-0 left-0 z-10 flex w-full items-center justify-between p-4 pb-3"
     >
       <div className="flex items-center gap-4">
         <Button

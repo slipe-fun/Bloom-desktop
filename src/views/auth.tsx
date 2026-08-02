@@ -51,7 +51,7 @@ export function Auth() {
   }, [method])
 
   return (
-    <section className="flex h-screen bg-background w-screen flex-col items-center justify-center gap-6">
+    <section className="flex h-screen w-screen flex-col items-center justify-center gap-6">
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.div
           key={method}

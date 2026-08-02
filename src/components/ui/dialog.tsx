@@ -27,13 +27,13 @@ export function CustomModal({
               render={
                 <motion.div
                   className={cn(
-                    'fixed inset-0 z-50 bg-black/15 backdrop-blur-sm',
+                    'fixed inset-0 z-50 bg-popover-backdrop backdrop-blur-sm',
                     overlayClassName
                   )}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={EASING.middleSpring}
+                  transition={EASING.normalSpring}
                 />
               }
             />
@@ -43,13 +43,13 @@ export function CustomModal({
                 render={
                   <motion.div
                     className={cn(
-                      'w-full max-w-md rounded-[40px] overflow-hidden bg-popover shadow-[0_5px_24px_0px_rgba(0,0,0,0.08)] focus:outline-none',
+                      'w-full max-w-md rounded-4xl overflow-hidden bg-popover focus:outline-none',
                       className
                     )}
-                    initial={{ opacity: 0, y: -60 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 60 }}
-                    transition={EASING.middleSpring}
+                    initial={{ opacity: 0, scale: 1.05, filter: 'blur(5px)' }}
+                    animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, scale: 1.05, filter: 'blur(5px)' }}
+                    transition={EASING.normalSpring}
                   />
                 }
               >
@@ -63,7 +63,7 @@ export function CustomModal({
   );
 }
 
-// Экспортируем вспомогательные примитивы Base UI для семантики и accessibility
 export const ModalTitle = Dialog.Title;
 export const ModalDescription = Dialog.Description;
+export const ModalCloseButton = Dialog.Close;
 export const ModalClose = Dialog.Close;

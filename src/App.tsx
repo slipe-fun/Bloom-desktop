@@ -36,14 +36,14 @@ export function App() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-svh flex-col bg-secondary-background">
+      <div className="flex min-h-svh flex-col bg-background">
         <Titlebar />
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-svh flex-col bg-secondary-background">
+    <div className="flex min-h-svh flex-col bg-background">
       <Titlebar />
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.main
