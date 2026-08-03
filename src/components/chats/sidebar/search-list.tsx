@@ -1,10 +1,9 @@
 import DashedBox from "@/components/ui/dashed-box"
 import Magnifyingglass from "@/assets/icons/magnifyingglass.svg?react"
-import { SIDEBAR_USER_BOTTOM_HEIGHT } from "./user-bottom"
 
 export function SidebarSearchList() {
   return (
-    <div style={{ paddingBottom: SIDEBAR_USER_BOTTOM_HEIGHT }} className="flex size-full flex-col items-center justify-center gap-6">
+    <div className="flex size-full flex-col items-center justify-center gap-6">
       <DashedBox width={100} height={100} className="text-foreground/20">
         <Magnifyingglass className="h-16.25 w-16.25 text-foreground/20" />
       </DashedBox>

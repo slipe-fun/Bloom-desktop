@@ -6,8 +6,8 @@ import { HeaderNewChatButton } from "./header-new-chat-button"
 export default function SidebarHeader() {
   return (
     <header
-      style={{ paddingTop: TITLEBAR_HEIGHT }}
-      className="flex w-full flex-col gap-4 border-b border-foreground/10 p-4 pb-3 select-none"
+      style={{ paddingTop: TITLEBAR_HEIGHT + 16 }}
+      className="flex w-full flex-col gap-4 p-4 pb-3 select-none"
     >
       <div className="flex items-center justify-between">
         <div className="flex w-full cursor-default items-center gap-1.5">

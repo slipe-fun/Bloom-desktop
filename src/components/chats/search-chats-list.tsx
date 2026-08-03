@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { VirtuosoScrollArea } from "@/components/ui/scroll-area"
 import { SearchChatsListRow } from "./search-chats-list-row"
 import { cn } from "@/lib/utils"
-import { SIDEBAR_USER_BOTTOM_HEIGHT } from "./sidebar/user-bottom"
 
 export interface Chat {
   id: string
@@ -76,7 +75,7 @@ export function SearchChatsList({ className, isDialog }: SearchChatsListProps) {
             <SearchChatsListRow
               chat={chat}
               isFirst={index === 0}
-              paddingBottom={index === chats.length - 1 ? (isDialog ? 8 : SIDEBAR_USER_BOTTOM_HEIGHT) : 0}
+              paddingBottom={index === chats.length - 1 ? (isDialog ? 8 : 16) : 0}
             />
           )}
         />

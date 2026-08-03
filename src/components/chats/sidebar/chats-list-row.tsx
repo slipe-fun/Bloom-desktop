@@ -3,9 +3,7 @@ import { motion } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { EASING } from "@/constants/animations-easing"
 import { type Chat } from "./chats-list"
-import { SIDEBAR_USER_BOTTOM_HEIGHT } from "./user-bottom"
 import { homeActions } from "@/store/home.store"
-import ChevronRight from "@/assets/icons/chevron.right.svg?react"
 import { titlebarActions } from "@/store/titlebar.store"
 
 export const ChatsListRow = memo(function ChatsListRow({
@@ -35,7 +33,7 @@ export const ChatsListRow = memo(function ChatsListRow({
 
   const selectChat = () => {
     homeActions.setCurrentChat(chat.id)
-    
+
     titlebarActions.push({
       title: "Chats",
       subtitle: chat.id,
@@ -56,38 +54,39 @@ export const ChatsListRow = memo(function ChatsListRow({
       onAnimationComplete={() => {
         if (isDeleting) onFinishDelete(chat.id)
       }}
-      whileTap={{ scale: 0.985 }}
+      whileTap={{ scale: 0.97 }}
       onClick={selectChat}
-      style={isLast ? { paddingBottom: SIDEBAR_USER_BOTTOM_HEIGHT } : undefined}
-      className={`overflow-hidden px-2 will-change-transform ${isFirst ? "pt-2" : ""}`}
+      style={{ paddingBottom: isLast ? 16 : 4 }}
+      className={`overflow-hidden px-4 will-change-transform select-none ${isFirst ? "pt-1" : ""}`}
     >
       <div
-        className={`flex w-full cursor-pointer rounded-2xl transition-colors hover:bg-secondary ${
-          isSelected ? "bg-secondary" : ""
+        className={`group flex w-full cursor-pointer rounded-2xl transition-colors hover:bg-selection-background ${
+          isSelected ? "bg-selection-background" : ""
         }`}
       >
-        <Avatar className="m-3 size-12.5">
+        <Avatar className="m-3 size-11">
           <AvatarImage src={chat.avatar} alt={chat.name} />
-          <AvatarFallback className="text-xl">
+          <AvatarFallback className="text-lg">
             {chat.avatarFallback}
           </AvatarFallback>
         </Avatar>
 
         <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5 pr-3">
-          <div className="flex items-center justify-between gap-1.5">
-            <h4 className="truncate text-base leading-4.75 font-semibold text-foreground">
-              {chat.name}
-            </h4>
-            <div className="flex shrink-0 items-center gap-1 text-foreground/40">
-              <span className="text-sm leading-4.25 font-medium">
-                {chat.time}
-              </span>
-              <ChevronRight className="size-4" />
-            </div>
-          </div>
-
+          <h4
+            className={`truncate text-base leading-4.75 font-semibold transition-colors group-hover:text-selection-foreground ${
+              isSelected ? "text-selection-foreground" : "text-foreground"
+            }`}
+          >
+            {chat.name}
+          </h4>
           <div className="flex items-center justify-between gap-2">
-            <p className="truncate text-sm leading-4.25 text-foreground/40">
+            <p
+              className={`truncate text-sm leading-4.25 transition-colors group-hover:text-selection-foreground/40 ${
+                isSelected
+                  ? "text-selection-foreground/40"
+                  : "text-foreground/40"
+              }`}
+            >
               {chat.message}
             </p>
 

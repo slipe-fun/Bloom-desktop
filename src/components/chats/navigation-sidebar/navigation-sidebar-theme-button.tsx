@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { useTheme } from "@/components/theme-provider"
 import themeAnimation from "@/assets/icons/lottie/theme.lottie"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 
 export function NavigationSidebarThemeButton() {
   const { theme, setTheme } = useTheme()
@@ -41,9 +42,9 @@ export function NavigationSidebarThemeButton() {
     <Tooltip>
       <TooltipTrigger
         render={
-          <button
+          <Button
             onClick={() => setTheme(isDark ? "light" : "dark")}
-            className="relative flex h-12 w-full items-center justify-center outline-none"
+            className="relative flex h-12 w-full items-center justify-center outline-none bg-transparent p-0 shadow-none"
           >
             <div className={cn("transition-opacity duration-200", isVisible ? "opacity-100" : "opacity-0")}>
               <DotLottieReact
@@ -53,7 +54,7 @@ export function NavigationSidebarThemeButton() {
                 className="size-8 dark:invert"
               />
             </div>
-          </button>
+          </Button>
         }
       />
       <TooltipContent side="right" sideOffset={0}>

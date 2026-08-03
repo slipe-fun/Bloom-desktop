@@ -1,7 +1,6 @@
 import { useSnapshot } from "valtio"
 import { ChatsList } from "./chats-list"
 import SidebarHeader from "./sidebar-header/sidebar-header"
-import { SidebarUserBottom } from "./user-bottom"
 import { homeStore } from "@/store/home.store"
 import { AnimatePresence, motion } from "framer-motion"
 import { EASING } from "@/constants/animations-easing"
@@ -11,7 +10,7 @@ export function Sidebar() {
   const { isSearch } = useSnapshot(homeStore)
 
   return (
-    <aside className="relative flex h-full min-w-87.5 w-87.5 flex-col overflow-hidden">
+    <aside className="relative flex h-full min-w-94 w-94 flex-col overflow-hidden">
       <SidebarHeader />
       <AnimatePresence initial={false} mode="popLayout">
         <motion.div
@@ -25,7 +24,6 @@ export function Sidebar() {
           {!isSearch ? <ChatsList /> : <SidebarSearchList/>}
         </motion.div>
       </AnimatePresence>
-      <SidebarUserBottom />
     </aside>
   )
 }
