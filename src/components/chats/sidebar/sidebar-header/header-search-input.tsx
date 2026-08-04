@@ -53,7 +53,7 @@ export function HeaderSearchInput() {
 
   return (
     <div
-      className="relative h-11 w-full cursor-text overflow-hidden rounded-full bg-secondary"
+      className="relative h-11 w-full cursor-text overflow-hidden rounded-full bg-secondary shadow-[0_0px_24px_4px_rgba(0,0,0,0.04)]"
       onClick={() => inputRef.current?.focus()}
     >
       <motion.div

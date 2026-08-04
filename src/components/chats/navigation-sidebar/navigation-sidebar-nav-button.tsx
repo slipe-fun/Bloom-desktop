@@ -5,6 +5,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { EASING } from "@/constants/animations-easing"
 import { cn } from "@/lib/utils"
 import type { NavItem } from "./navigation-sidebar"
+import { Button } from "@/components/ui/button"
 
 export function NavigationSidebarButton({
   item,
@@ -41,11 +42,12 @@ export function NavigationSidebarButton({
     <Tooltip>
       <TooltipTrigger
         render={
-          <button
+          <Button
             onClick={onSelect}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={() => onHoverChange(false)}
-            className="group relative flex h-12 w-full items-center justify-center outline-none"
+            whileTap={{ scale: 1 }}
+            className="group relative flex h-12 w-full items-center justify-center outline-none p-0 shadow-none bg-transparent"
           >
             {isActive && (
               <motion.div
@@ -83,7 +85,7 @@ export function NavigationSidebarButton({
                 />
               ) : null}
             </div>
-          </button>
+          </Button>
         }
       />
       <TooltipContent side="right" sideOffset={0}>{item.label}</TooltipContent>
